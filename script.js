@@ -2703,24 +2703,46 @@ function renderProfile(user) {
   const assignedCourses = courses.filter((item) => (state.assignments[user.id] || []).includes(item.id));
   const completed = user.role === 'student' ? assignedCourses.reduce((sum, item) => sum + userProgress(user.id, item.id).completedLessons.length, 0) : 0;
   const totalLessons = assignedCourses.reduce((sum, item) => sum + item.lessons.length, 0) || 0;
+  const progressPercent = totalLessons ? Math.round((completed / totalLessons) * 100) : 0;
+  const initials = user.name.split(' ').filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase() || 'NS';
+  const recentAttempts = attempts.slice(-4).reverse();
   renderShell(user, `
-    <section class="profile-page">
-      <p class="eyebrow">My profile</p>
-      <h1>${escapeHtml(user.name)}</h1>
-      <p>${escapeHtml(user.email)} • ${user.role}</p>
-      ${user.role === 'student' ? `<div class="dashboard-stat"><strong>${completed}/${totalLessons}</strong><span>lessons completed</span></div>` : ''}
-      <div class="profile-grid">
-        <form id="profile-details-form" class="stack-form profile-card">
+    <section class="profile-page profile-redesign">
+      <header class="profile-hero">
+        <h1>${escapeHtml(user.name)}</h1>
+        <p>${escapeHtml(user.email)} • ${user.role}</p>
+      </header>
+
+      ${user.role === 'student' ? `
+        <section class="profile-progress-card">
+          <div>
+            <strong>Overall Progress</strong>
+            <div class="profile-progress-track" aria-label="${progressPercent}% complete"><span style="width:${progressPercent}%"></span></div>
+          </div>
+          <div class="profile-progress-meta">
+            <strong>${completed}/${totalLessons} lessons completed</strong>
+            <span class="profile-initials muted">${initials.slice(0, 1)}</span>
+            <span class="profile-initials">${initials}</span>
+          </div>
+        </section>
+      ` : ''}
+
+      <div class="profile-grid profile-redesign-grid">
+        <form id="profile-details-form" class="stack-form profile-card profile-details-card">
           <h2>Profile details</h2>
-          <label>Phone number<input name="phone" value="${escapeHtml(user.phone || '')}" /></label>
-          <label>College or university<input name="college" value="${escapeHtml(user.college || '')}" /></label>
-          <label>LinkedIn<input name="linkedin" type="url" value="${escapeHtml(user.linkedin || '')}" placeholder="https://linkedin.com/in/..." /></label>
-          <label>Instagram<input name="instagram" type="url" value="${escapeHtml(user.instagram || '')}" placeholder="https://instagram.com/..." /></label>
-          <label>Website<input name="website" type="url" value="${escapeHtml(user.website || '')}" placeholder="https://example.com" /></label>
-          <button class="button primary" type="submit">Save profile</button>
-          <p id="profile-message" class="form-error"></p>
+          <div class="profile-fields">
+            <label>Phone number<input name="phone" value="${escapeHtml(user.phone || '')}" placeholder="+1 (555) 000-0000" /></label>
+            <label>College or university<input name="college" value="${escapeHtml(user.college || '')}" placeholder="Global Tech University" /></label>
+            <label class="profile-wide">LinkedIn Profile<span class="profile-input-icon"><span>↗</span><input name="linkedin" type="url" value="${escapeHtml(user.linkedin || '')}" placeholder="https://linkedin.com/in/..." /></span></label>
+            <label class="profile-wide">Instagram<span class="profile-input-icon"><span>@</span><input name="instagram" type="url" value="${escapeHtml(user.instagram || '')}" placeholder="https://instagram.com/..." /></span></label>
+            <label class="profile-wide">Website<input name="website" type="url" value="${escapeHtml(user.website || '')}" placeholder="https://example.com" /></label>
+          </div>
+          <div class="profile-form-footer">
+            <p id="profile-message" class="form-error"></p>
+            <button class="button primary" type="submit">Save profile</button>
+          </div>
         </form>
-        <form id="password-form" class="stack-form profile-card">
+        <form id="password-form" class="stack-form profile-card profile-password-card">
           <h2>Change password</h2>
           <label>Existing password<input name="existingPassword" type="password" required /></label>
           <label>New password<input name="newPassword" type="password" minlength="6" maxlength="10" required /></label>
@@ -2729,13 +2751,30 @@ function renderProfile(user) {
           <p id="password-message" class="form-error"></p>
         </form>
       </div>
-      <h2>Recent test activity</h2>
-      ${attempts.slice(-6).reverse().map((attempt) => `
-        <div class="attempt-row">
-          <strong>${getCourse(attempt.courseId).title} • Lesson ${attempt.lessonIndex + 1}: ${attempt.passed ? 'Passed' : 'Retake needed'}</strong>
-          <span>${attempt.correct}/10 correct • ${secondsToClock(attempt.timeSpent)}</span>
+
+      <section class="profile-activity-section">
+        <div class="profile-section-row">
+          <h2>Recent test activity</h2>
+          <span>View all activity →</span>
         </div>
-      `).join('') || '<p>No student test activity yet.</p>'}
+        <div class="profile-activity-list">
+          ${recentAttempts.length ? recentAttempts.map((attempt) => {
+            const item = getCourse(attempt.courseId);
+            const scoreLabel = attempt.correct >= 9 ? 'Perfect' : attempt.passed ? 'Passed' : 'Retake';
+            return `
+              <article class="profile-attempt-row">
+                ${courseLogo(item)}
+                <div>
+                  <strong>${item.title} • Lesson ${attempt.lessonIndex + 1}: ${attempt.passed ? 'Passed' : 'Retake needed'}</strong>
+                  <span>${attempt.correct}/10 correct • ${secondsToClock(attempt.timeSpent)}</span>
+                </div>
+                <span class="profile-score-pill ${attempt.passed ? 'success' : 'warning'}">${scoreLabel}</span>
+                <span class="profile-row-arrow">›</span>
+              </article>
+            `;
+          }).join('') : '<article class="profile-empty-activity">No student test activity yet.</article>'}
+        </div>
+      </section>
     </section>
   `);
   document.querySelector('#profile-details-form')?.addEventListener('submit', (event) => {
