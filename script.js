@@ -1764,6 +1764,53 @@ let activeTest = null;
 let dashboardCourseTab = 'all';
 let dashboardStatsPeriod = 'weekly';
 
+function routeFromPath() {
+  const segments = window.location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
+  if (!segments.length) return {view: 'login'};
+  if (segments[0] === 'login') return {view: 'login'};
+  if (segments[0] === 'dashboard') return {view: 'dashboard'};
+  if (segments[0] === 'profile') return {view: 'profile'};
+  if (segments[0] === 'admin' && segments[1] === 'students' && segments[2]) {
+    activeStudentId = segments[2];
+    return {view: 'student-report', studentId: segments[2]};
+  }
+  if (segments[0] === 'admin') return {view: 'admin'};
+  if (segments[0] === 'course' && segments[1]) {
+    return {
+      view: 'course',
+      courseId: segments[1],
+      lesson: Math.max(0, Number(segments[3] || 1) - 1)
+    };
+  }
+  return {view: 'login'};
+}
+
+function pathFromRoute(nextRoute) {
+  if (!nextRoute || nextRoute.view === 'login') return '/login';
+  if (nextRoute.view === 'dashboard') return '/dashboard';
+  if (nextRoute.view === 'profile') return '/profile';
+  if (nextRoute.view === 'admin') return '/admin';
+  if (nextRoute.view === 'student-report') return `/admin/students/${encodeURIComponent(nextRoute.studentId || activeStudentId || '')}`;
+  if (nextRoute.view === 'course') {
+    const targetCourse = encodeURIComponent(nextRoute.courseId || course.id);
+    const lessonNumber = Math.max(1, Number(nextRoute.lesson || 0) + 1);
+    return `/course/${targetCourse}/lesson/${lessonNumber}`;
+  }
+  return '/dashboard';
+}
+
+function navigate(nextRoute, options = {}) {
+  stopLessonTimer();
+  route = {...nextRoute};
+  if (route.view === 'student-report') activeStudentId = route.studentId || activeStudentId;
+  const nextPath = pathFromRoute(route);
+  if (window.location.pathname !== nextPath) {
+    const method = options.replace ? 'replaceState' : 'pushState';
+    window.history[method]({}, '', nextPath);
+  }
+  render();
+}
+
 const seedState = {
   users: [
     {
@@ -1866,6 +1913,7 @@ async function bootstrapApp() {
 
   const changed = ensureSeedAssignments();
   if (remoteStateEnabled || changed) saveState();
+  route = routeFromPath();
   render();
 }
 
@@ -2158,9 +2206,9 @@ function renderShell(user, content) {
   const nav = user
     ? `
       <nav class="platform-nav">
-        <button data-route="dashboard">Dashboard</button>
-        ${user.role === 'admin' ? '<button data-route="admin">Admin</button>' : ''}
-        <button data-route="profile">My profile</button>
+        <button class="${route.view === 'dashboard' ? 'active' : ''}" data-route="dashboard">Dashboard</button>
+        ${user.role === 'admin' ? `<button class="${route.view === 'admin' || route.view === 'student-report' ? 'active' : ''}" data-route="admin">Admin</button>` : ''}
+        <button class="${route.view === 'profile' ? 'active' : ''}" data-route="profile">My profile</button>
         <button data-action="logout">Logout</button>
       </nav>
     `
@@ -2184,16 +2232,13 @@ function bindGlobalActions() {
       event.preventDefault();
       const user = getSessionUser();
       if (!user) return renderLogin();
-      stopLessonTimer();
-      route = {view: button.dataset.route};
-      render();
+      navigate({view: button.dataset.route});
     });
   });
   document.querySelector('[data-action="logout"]')?.addEventListener('click', () => {
     stopLessonTimer();
     clearSession();
-    route = {view: 'login'};
-    renderLogin();
+    navigate({view: 'login'}, {replace: true});
   });
 }
 
@@ -2231,8 +2276,7 @@ function renderLogin() {
       return;
     }
     setSession(user);
-    route = {view: user.role === 'admin' ? 'admin' : 'dashboard'};
-    render();
+    navigate({view: user.role === 'admin' ? 'admin' : 'dashboard'}, {replace: true});
   });
 }
 
@@ -2421,8 +2465,7 @@ function renderDashboard(user) {
     if (notificationPanel) notificationPanel.hidden = true;
   });
   document.querySelectorAll('[data-open-course]').forEach((button) => button.addEventListener('click', () => {
-    route = {view: 'course', courseId: button.dataset.openCourse, lesson: 0};
-    render();
+    navigate({view: 'course', courseId: button.dataset.openCourse, lesson: 0});
   }));
   document.querySelectorAll('[data-request-course]').forEach((button) => button.addEventListener('click', () => {
     const requestedCourse = getCourse(button.dataset.requestCourse);
@@ -2597,13 +2640,13 @@ function renderAdmin(user) {
   document.querySelectorAll('[data-view-student]').forEach((button) => {
     button.addEventListener('click', () => {
       activeStudentId = button.dataset.viewStudent;
-      route = {view: 'student-report'};
-      render();
+      navigate({view: 'student-report', studentId: activeStudentId});
     });
   });
 }
 
 function renderStudentReport(adminUser) {
+  activeStudentId = route.studentId || activeStudentId;
   const student = state.users.find((user) => user.id === activeStudentId);
   if (!student) return renderAdmin(adminUser);
   const attempts = state.attempts.filter((attempt) => attempt.userId === student.id);
@@ -2778,8 +2821,7 @@ function renderLesson(user) {
   activeLesson = lessonIndex;
   const lesson = course.lessons[lessonIndex];
   if (!isLessonUnlocked(user.id, lessonIndex)) {
-    route = {view: 'course', lesson: 0};
-    return renderLesson(user);
+    return navigate({view: 'course', courseId: course.id, lesson: 0}, {replace: true});
   }
   startLessonTimer(user.id, lessonIndex);
   const completed = userProgress(user.id).completedLessons;
@@ -2824,8 +2866,7 @@ function renderLesson(user) {
   `);
   document.querySelectorAll('[data-lesson-nav]').forEach((button) => {
     button.addEventListener('click', () => {
-      route = {view: 'course', courseId: course.id, lesson: Number(button.dataset.lessonNav)};
-      render();
+      navigate({view: 'course', courseId: course.id, lesson: Number(button.dataset.lessonNav)});
     });
   });
   document.querySelector('[data-start-test]').addEventListener('click', () => startTest(user, lessonIndex));
@@ -3021,9 +3062,8 @@ function submitTest(user, forced) {
     `;
     document.querySelector('[data-return-course]').addEventListener('click', () => {
       activeTest = null;
-      route = {view: 'course', courseId: attempt.courseId, lesson: attempt.lessonIndex + (passed ? 1 : 0)};
-      if (route.lesson >= course.lessons.length) route.lesson = course.lessons.length - 1;
-      render();
+      const nextLesson = Math.min(course.lessons.length - 1, attempt.lessonIndex + (passed ? 1 : 0));
+      navigate({view: 'course', courseId: attempt.courseId, lesson: nextLesson});
     });
   });
 }
@@ -3031,6 +3071,9 @@ function submitTest(user, forced) {
 function render() {
   const user = getSessionUser();
   if (!user) return renderLogin();
+  if (route.view === 'login') {
+    return navigate({view: user.role === 'admin' ? 'admin' : 'dashboard'}, {replace: true});
+  }
   if (route.view === 'admin') return user.role === 'admin' ? renderAdmin(user) : renderDashboard(user);
   if (route.view === 'student-report') return user.role === 'admin' ? renderStudentReport(user) : renderDashboard(user);
   if (route.view === 'profile') return renderProfile(user);
@@ -3046,6 +3089,12 @@ window.addEventListener('pagehide', () => {
   if (!remoteStateEnabled || !navigator.sendBeacon) return;
   const payload = new Blob([JSON.stringify({state})], {type: 'application/json'});
   navigator.sendBeacon('/api/platform-state', payload);
+});
+
+window.addEventListener('popstate', () => {
+  stopLessonTimer();
+  route = routeFromPath();
+  render();
 });
 
 document.querySelector('#app').innerHTML = '<main class="platform-main"><section class="empty-card">Loading NextSkills...</section></main>';

@@ -1,0 +1,10 @@
+{
+  "rewrites": [
+    {"source": "/login", "destination": "/index.html"},
+    {"source": "/dashboard", "destination": "/index.html"},
+    {"source": "/profile", "destination": "/index.html"},
+    {"source": "/admin", "destination": "/index.html"},
+    {"source": "/admin/:path*", "destination": "/index.html"},
+    {"source": "/course/:path*", "destination": "/index.html"}
+  ]
+}
