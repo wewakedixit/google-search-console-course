@@ -18,7 +18,6 @@
       </a>
       <nav class="nav" aria-label="Course navigation">
         <a href="#course">Lessons</a>
-        <a href="#examples">Examples</a>
         <a href="#checklists">Checklists</a>
         <a href="#sources">Sources</a>
       </nav>
@@ -34,8 +33,8 @@
             understand how their website appears on Google Search without needing technical SEO knowledge.
           </p>
           <div class="hero-actions">
-            <a class="button primary" href="#course">Start lesson 1</a>
-            <a class="button secondary" href="#quick-glossary">Learn the words first</a>
+            <a class="button primary" href="#course">Start the course</a>
+            <a class="button secondary" href="#checklists">View course tools</a>
           </div>
         </div>
 
@@ -81,13 +80,13 @@
         <div>
           <h2>What you will be able to do</h2>
           <p>
-            By the end, you can set up Search Console, read the main reports, spot common website
-            problems, explain the numbers, and choose simple next steps that improve useful traffic.
+            Each lesson is designed as a one-hour paid-course module with simple language, examples,
+            terminology, practice tasks, and a quiz. Lessons unlock one by one as you complete them.
           </p>
         </div>
         <div class="stats">
-          <span><b>10</b> lessons</span>
-          <span><b>6</b> examples</span>
+          <span><b>10</b> one-hour lessons</span>
+          <span><b>30</b> quiz questions</span>
           <span><b>0</b> coding needed</span>
         </div>
       </section>
@@ -120,68 +119,10 @@
             <div id="lesson-content"></div>
             <div class="lesson-actions">
               <button class="button secondary" id="prev-lesson">Previous</button>
+              <button class="button primary" id="complete-lesson">Complete lesson</button>
               <button class="button primary" id="next-lesson">Next lesson</button>
+              <button class="button text-button" id="reset-progress">Reset progress</button>
             </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="quick-glossary" class="content-section">
-        <div class="section-heading">
-          <p class="eyebrow">Plain-English glossary</p>
-          <h2>Important words</h2>
-        </div>
-        <div class="term-grid">
-          <article><h3>Click</h3><p>Someone clicked your website link from Google Search.</p></article>
-          <article><h3>Impression</h3><p>Your website appeared on a Google results page for someone.</p></article>
-          <article><h3>CTR</h3><p>Click-through rate. Clicks divided by impressions.</p></article>
-          <article><h3>Average position</h3><p>The average ranking of your top result for a search.</p></article>
-          <article><h3>Indexed</h3><p>Google knows the page and may show it in search results.</p></article>
-          <article><h3>Sitemap</h3><p>A file that lists pages you want Google to know about.</p></article>
-        </div>
-      </section>
-
-      <section id="examples" class="content-section tinted">
-        <div class="section-heading">
-          <p class="eyebrow">Examples</p>
-          <h2>How to think like a beginner SEO</h2>
-        </div>
-        <div class="example-grid">
-          <article class="example-card">
-            <h3>Example 1: High impressions, low clicks</h3>
-            <p>
-              A page appears 8,000 times for “family dentist in Delhi” but gets only 40 clicks.
-              This means people are seeing it, but the title or description may not feel useful.
-            </p>
-            <b>Simple action:</b>
-            <p>Rewrite the page title to clearly include the service, location, and benefit.</p>
-          </article>
-          <article class="example-card">
-            <h3>Example 2: New blog is not on Google</h3>
-            <p>
-              You published “How to choose a preschool” yesterday, but it does not show in Google.
-              This can be normal. Google may not have crawled it yet.
-            </p>
-            <b>Simple action:</b>
-            <p>Use URL Inspection, test the live URL, and request indexing if the page is ready.</p>
-          </article>
-          <article class="example-card">
-            <h3>Example 3: Traffic suddenly drops</h3>
-            <p>
-              Your clicks dropped after your website moved from http to https. You might be looking
-              at the wrong property or an old version of the site.
-            </p>
-            <b>Simple action:</b>
-            <p>Check that the property matches your live website version exactly.</p>
-          </article>
-          <article class="example-card">
-            <h3>Example 4: Many pages are not indexed</h3>
-            <p>
-              Search Console says some pages are “Discovered” or “Crawled” but not indexed. Google
-              may know them but has not decided to show them.
-            </p>
-            <b>Simple action:</b>
-            <p>Improve weak pages, remove duplicates, and make sure important pages are linked clearly.</p>
           </article>
         </div>
       </section>
@@ -216,18 +157,6 @@
             <label><input type="checkbox" /> Is the page linked from another useful page?</label>
             <label><input type="checkbox" /> Is the page available to Google?</label>
           </article>
-        </div>
-      </section>
-
-      <section class="quiz-section">
-        <div class="section-heading">
-          <p class="eyebrow">Quick quiz</p>
-          <h2>Check your understanding</h2>
-        </div>
-        <div class="quiz-card">
-          <p id="quiz-question"></p>
-          <div id="quiz-options" class="quiz-options"></div>
-          <p id="quiz-feedback" class="quiz-feedback"></p>
         </div>
       </section>
 

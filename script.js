@@ -1,176 +1,965 @@
+const storageKey = 'gsc-course-completed-lessons-v2';
+
 const lessons = [
   {
-    title: 'What Google Search Console is',
-    goal: 'Understand what the tool does and why it matters.',
-    body: `
-      <p>Google Search Console is a free Google tool that helps you understand how your website performs in Google Search. It shows how Google finds your pages, whether your pages can appear in Search, and what people search before they click your website.</p>
-      <div class="callout"><strong>Simple meaning:</strong> It is like a health report and performance report for your website on Google Search.</div>
-      <h4>What it can help you answer</h4>
-      <ul>
-        <li>Are people finding my website on Google?</li>
-        <li>Which search words bring people to my site?</li>
-        <li>Which pages are getting clicks?</li>
-        <li>Can Google read and index my important pages?</li>
-        <li>Did Google find any serious issues?</li>
-      </ul>
-      <div class="practice"><strong>Practice:</strong> Write down three important pages on your website. Example: Home, Services, Contact.</div>
-    `
+    title: 'Search Console and SEO basics',
+    duration: '60 minutes',
+    goal: 'Understand what Google Search Console is, what SEO means, and why the tool matters for a website owner.',
+    outcomes: [
+      'Explain Google Search Console in simple words.',
+      'Understand what organic search traffic means.',
+      'Know what Search Console can and cannot do.',
+      'Create a short list of pages you want Google users to find.'
+    ],
+    sections: {
+      what: [
+        'Google Search Console is a free tool from Google. It helps you understand how your website appears in Google Search.',
+        'It shows search words people used, pages that received clicks, pages Google could or could not index, and warnings about important search issues.',
+        'SEO means improving your website so the right people can find useful pages through search engines. Search Console does not do SEO for you; it gives you clues so you can make better decisions.'
+      ],
+      why: [
+        'Without Search Console, you may only guess how Google sees your website. With it, you can see real search data from Google.',
+        'A non-technical user can use it to answer practical questions: Are people finding us? Which pages work? Which pages need help? Did Google find a problem?',
+        'It is especially useful after launching a new website, adding new service pages, publishing blogs, changing URLs, or noticing a traffic drop.'
+      ],
+      where: [
+        'Use the Performance report to understand traffic from Google Search.',
+        'Use Page indexing to see whether Google can include your pages in Search.',
+        'Use URL Inspection when you want to check one specific page.',
+        'Use Sitemaps when you want to help Google discover important URLs.'
+      ],
+      how: [
+        'Start by adding your website property and verifying ownership.',
+        'Wait for data to appear. New properties often need time before reports become useful.',
+        'Check the account monthly and after major website changes. Google says you do not need to check it every day unless you are actively investigating an issue.',
+        'Turn every report into a simple action: improve a title, fix a missing page, check an indexing issue, or write a better answer for searchers.'
+      ]
+    },
+    glossary: [
+      ['SEO', 'Search engine optimization. Improving your website so people can find helpful pages in unpaid search results.'],
+      ['Organic traffic', 'Visitors who come from unpaid Google Search results, not ads.'],
+      ['Property', 'The website or website section you add inside Search Console.'],
+      ['Index', 'Google’s stored understanding of pages it may show in Search.'],
+      ['Query', 'The words a person typed or spoke into Google Search.']
+    ],
+    examples: [
+      {
+        title: 'Local clinic owner',
+        problem: 'A dental clinic owner wants to know if people find the site for “kids dentist near me.”',
+        walkthrough: 'In Performance, they check Queries. If the query appears with impressions but few clicks, the page may be visible but not attractive enough. They can improve the title and page introduction.',
+        takeaway: 'Search Console turns a vague question into a clear content improvement.'
+      },
+      {
+        title: 'New blog publisher',
+        problem: 'A school publishes a blog post but cannot find it on Google the next day.',
+        walkthrough: 'They use URL Inspection to check whether Google knows the URL. If the live page is indexable, they can request indexing and then wait.',
+        takeaway: 'Search Console helps you check status, but it does not guarantee instant ranking.'
+      }
+    ],
+    practice: [
+      'Write down your website’s main purpose in one sentence.',
+      'List 5 pages that matter most to your business.',
+      'For each page, write the search phrase you hope people use to find it.',
+      'Mark which pages are business-critical, such as service, product, booking, or contact pages.'
+    ],
+    mistakes: [
+      'Expecting Search Console to increase rankings automatically.',
+      'Checking only total clicks and ignoring which pages or queries changed.',
+      'Looking at one day of data and panicking instead of comparing longer periods.'
+    ],
+    quiz: [
+      {
+        question: 'What is the simplest description of Google Search Console?',
+        options: [
+          'A free Google tool that shows how your website performs in Google Search.',
+          'A paid advertising platform for search ads.',
+          'A tool that automatically writes SEO pages for you.'
+        ],
+        answer: 0
+      },
+      {
+        question: 'What should a beginner do with Search Console data?',
+        options: [
+          'Use it as clues for improving pages and fixing issues.',
+          'Refresh it every hour and change the site every time numbers move.',
+          'Ignore pages and only look at the total clicks number.'
+        ],
+        answer: 0
+      },
+      {
+        question: 'Which report is usually the best first place to understand search traffic?',
+        options: ['Performance', 'Removals', 'Users and permissions'],
+        answer: 0
+      }
+    ]
   },
   {
     title: 'Add your website and verify ownership',
-    goal: 'Set up Search Console safely.',
-    body: `
-      <p>Before Google shows private data, you must prove that you own or manage the website. Google calls this ownership verification.</p>
-      <h4>Two common property types</h4>
-      <ul>
-        <li><strong>Domain property:</strong> Best full view. It includes http, https, www, non-www, and subdomains. It usually needs DNS verification.</li>
-        <li><strong>URL-prefix property:</strong> Tracks only the exact version you enter, such as https://example.com/. It can be easier for some websites.</li>
-      </ul>
-      <div class="callout"><strong>Beginner tip:</strong> If you are unsure, ask your website developer or domain provider for help with DNS verification.</div>
-      <div class="practice"><strong>Example:</strong> If your live site is https://www.myclinic.com, do not only add http://myclinic.com. The version must match what people use.</div>
-    `
+    duration: '60 minutes',
+    goal: 'Learn how website properties work and how to verify ownership without needing to understand code deeply.',
+    outcomes: [
+      'Choose between a Domain property and a URL-prefix property.',
+      'Understand why Google requires verification.',
+      'Know what to ask a developer, host, or domain provider.',
+      'Avoid tracking the wrong website version.'
+    ],
+    sections: {
+      what: [
+        'Before Search Console shows private data, Google asks you to prove that you own or manage the website. This is called ownership verification.',
+        'A property is the website version you add to Search Console. The property decides what data you see.',
+        'A Domain property covers the full domain, including http, https, www, non-www, and subdomains. A URL-prefix property covers only the exact URL prefix you enter.'
+      ],
+      why: [
+        'Search Console can reveal sensitive information, such as search queries, indexing problems, and actions that affect how the site appears on Google.',
+        'Only a real owner or trusted manager should have high-level access.',
+        'Choosing the right property prevents a common beginner problem: thinking traffic disappeared when you are simply looking at the wrong site version.'
+      ],
+      where: [
+        'Add a property from the Search Console property selector.',
+        'Use DNS settings at your domain provider for Domain property verification.',
+        'Use an HTML file, HTML tag, Google Analytics, Google Tag Manager, or other supported methods for URL-prefix verification when available.'
+      ],
+      how: [
+        'If you control the domain provider, choose Domain property and add the DNS TXT record Google gives you.',
+        'If you only manage one version of the site or need a simpler route, choose URL-prefix and enter the exact live address, such as https://www.example.com/.',
+        'After adding the verification record or tag, return to Search Console and click Verify.',
+        'If verification fails, wait and try again. DNS changes can take time.'
+      ]
+    },
+    glossary: [
+      ['Domain property', 'A property that includes all versions of a domain and usually uses DNS verification.'],
+      ['URL-prefix property', 'A property that includes only URLs beginning with the exact address you enter.'],
+      ['DNS', 'Domain Name System. The domain settings area where ownership records can be added.'],
+      ['Verification token', 'A unique code Google uses to confirm ownership.'],
+      ['Protocol', 'The start of a URL, such as http or https.']
+    ],
+    examples: [
+      {
+        title: 'Wrong property confusion',
+        problem: 'A business adds http://example.com but the real website is https://www.example.com.',
+        walkthrough: 'The Performance report may look empty or incomplete because Search Console is showing a different version. A Domain property would include all versions.',
+        takeaway: 'If you are unsure, Domain property is usually the fuller view.'
+      },
+      {
+        title: 'Non-technical owner asking for help',
+        problem: 'The owner cannot find DNS settings.',
+        walkthrough: 'They send the DNS TXT record to the person who manages the domain and ask them to add it exactly. After it is saved, they return to Search Console and verify.',
+        takeaway: 'You do not need to understand DNS deeply, but you must know who controls it.'
+      }
+    ],
+    practice: [
+      'Write your exact live website address.',
+      'Check whether your site uses www or non-www.',
+      'Check whether it uses https.',
+      'Identify who controls your domain provider account.',
+      'Decide whether Domain property or URL-prefix property is better for your situation.'
+    ],
+    mistakes: [
+      'Adding only one URL version and forgetting the real site uses another version.',
+      'Removing verification files or DNS records after verification.',
+      'Giving owner access to people who only need to view reports.'
+    ],
+    quiz: [
+      {
+        question: 'Why does Google require ownership verification?',
+        options: [
+          'Because Search Console contains sensitive site data and powerful controls.',
+          'Because Google charges for Search Console.',
+          'Because verification improves rankings automatically.'
+        ],
+        answer: 0
+      },
+      {
+        question: 'Which property usually gives the broadest view of a whole domain?',
+        options: ['Domain property', 'URL-prefix property', 'A single blog post URL'],
+        answer: 0
+      },
+      {
+        question: 'What should you do if DNS verification does not work immediately?',
+        options: ['Wait and try again because DNS can take time.', 'Delete your website.', 'Change every page title.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Understand the Performance report',
-    goal: 'Read clicks, impressions, CTR, and average position.',
-    body: `
-      <p>The Performance report shows how your website performs in Google Search. For a beginner, this is usually the most useful report.</p>
-      <h4>The four main numbers</h4>
-      <ul>
-        <li><strong>Clicks:</strong> People clicked your result.</li>
-        <li><strong>Impressions:</strong> Your result appeared in Google Search.</li>
-        <li><strong>CTR:</strong> The percentage of impressions that became clicks.</li>
-        <li><strong>Average position:</strong> The average ranking of your top result.</li>
-      </ul>
-      <div class="callout"><strong>Simple example:</strong> 1,000 impressions and 50 clicks means a 5% CTR. Out of every 100 times your result appeared, 5 people clicked.</div>
-      <div class="practice"><strong>Practice:</strong> Open Performance, set the date to last 3 months, and note the top 5 pages by clicks.</div>
-    `
+    title: 'Read the Performance report',
+    duration: '60 minutes',
+    goal: 'Understand clicks, impressions, CTR, position, filters, dates, pages, and queries.',
+    outcomes: [
+      'Explain the four main Performance metrics.',
+      'Compare data by date range without overreacting.',
+      'Find your top pages and queries.',
+      'Spot opportunities from high impressions and low CTR.'
+    ],
+    sections: {
+      what: [
+        'The Performance report shows how people find your website in Google Search. It includes clicks, impressions, click-through rate, and average position.',
+        'You can break the data down by queries, pages, countries, devices, search appearance, and dates.',
+        'For most beginners, Performance is the report they will use most often.'
+      ],
+      why: [
+        'Clicks show actual visits from Search. Impressions show visibility. CTR shows whether people chose your result. Average position gives a general ranking signal.',
+        'Looking at all four together prevents wrong conclusions. A page can have many impressions but low clicks. Another page can have few impressions but a strong CTR.',
+        'The report helps you choose work that matters instead of guessing what content to improve.'
+      ],
+      where: [
+        'Open Search Console and choose your property.',
+        'Select Performance, then Search results.',
+        'Use tabs like Queries and Pages to understand what is driving the totals.',
+        'Use filters when you want to focus on one page, one country, one device, or one query.'
+      ],
+      how: [
+        'Start with a 3-month date range so you have enough data.',
+        'Turn on all four metric boxes: clicks, impressions, CTR, and average position.',
+        'Open the Pages tab and sort by clicks to find pages already bringing traffic.',
+        'Open the Queries tab and sort by impressions to find topics where Google already shows you.',
+        'Look for a page or query with high impressions, low CTR, and a position that is not too far away from page one.'
+      ]
+    },
+    glossary: [
+      ['Click', 'A person clicked your website result in Google Search.'],
+      ['Impression', 'Your result appeared for a searcher.'],
+      ['CTR', 'Click-through rate. Clicks divided by impressions.'],
+      ['Average position', 'The average position of your top result for a query or page.'],
+      ['Filter', 'A way to narrow the report to specific data, such as one page or country.']
+    ],
+    examples: [
+      {
+        title: 'High impressions, low clicks',
+        problem: 'A preschool page has 12,000 impressions for “best preschool admission age” but only 72 clicks.',
+        walkthrough: 'The page appears often, but the search result is not earning many clicks. The owner checks the page title and description. They rewrite the title to “Preschool Admission Age Guide: Simple Parent Checklist.”',
+        takeaway: 'High impressions with low CTR often means the search result needs to look more relevant.'
+      },
+      {
+        title: 'Clicks dropped but impressions stayed stable',
+        problem: 'A service page still appears often, but clicks are down.',
+        walkthrough: 'This can happen if competitors write more attractive titles, if the search result layout changes, or if the page title no longer matches searcher intent.',
+        takeaway: 'Do not only ask “Did rankings drop?” Ask whether people still want to click your result.'
+      }
+    ],
+    practice: [
+      'Set the date range to last 3 months.',
+      'Write down the top 5 pages by clicks.',
+      'Write down the top 10 queries by impressions.',
+      'Choose one query with many impressions and low CTR.',
+      'Write a better page title for the page that appears for that query.'
+    ],
+    mistakes: [
+      'Thinking average position is the exact same ranking every user sees.',
+      'Judging performance from one day of data.',
+      'Ignoring impressions because clicks feel more exciting.'
+    ],
+    quiz: [
+      {
+        question: 'What does CTR mean in Search Console?',
+        options: ['Clicks divided by impressions.', 'Total ranking score.', 'The number of indexed pages.'],
+        answer: 0
+      },
+      {
+        question: 'A page has many impressions but few clicks. What is a likely opportunity?',
+        options: ['Improve the title, description, or page relevance.', 'Delete Search Console.', 'Assume Google has banned the site.'],
+        answer: 0
+      },
+      {
+        question: 'Why should you use date ranges carefully?',
+        options: ['Short periods can look noisy and misleading.', 'Date ranges change the website code.', 'Google only stores one day of data.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Find your best searches',
-    goal: 'Use search queries to improve content.',
-    body: `
-      <p>Search Console calls the words people type into Google “queries.” These are very useful because they show what your audience wants.</p>
-      <h4>How to use queries</h4>
-      <ol>
-        <li>Open Performance.</li>
-        <li>Choose the Queries tab.</li>
-        <li>Sort by impressions to see topics where you appear often.</li>
-        <li>Look for high impressions but low CTR.</li>
-      </ol>
-      <div class="callout"><strong>Simple action:</strong> If many people see your result but few click, improve the title, meta description, or page introduction so the result feels more useful.</div>
-      <div class="practice"><strong>Example:</strong> Query: “best school admission age.” Add a clear section on the page answering exactly that question.</div>
-    `
+    title: 'Use queries to plan better content',
+    duration: '60 minutes',
+    goal: 'Turn search queries into page improvements, blog ideas, and clearer answers for users.',
+    outcomes: [
+      'Understand search intent in simple language.',
+      'Group similar queries into topics.',
+      'Choose which content to improve first.',
+      'Write page sections that answer real searches.'
+    ],
+    sections: {
+      what: [
+        'A query is what someone searched on Google before seeing or clicking your website.',
+        'Queries are not just keywords. They are clues about people’s questions, problems, locations, and buying stage.',
+        'The same page can appear for many related queries.'
+      ],
+      why: [
+        'Queries tell you what real people want. This is more useful than guessing topics in a meeting.',
+        'You can use queries to improve existing pages before creating new pages.',
+        'A beginner can use queries to write clearer headings, FAQs, service explanations, and blog topics.'
+      ],
+      where: [
+        'Find queries in the Performance report under the Queries tab.',
+        'Click a page first, then check Queries to see which searches lead to that page.',
+        'Export data if you want to group topics in a spreadsheet.'
+      ],
+      how: [
+        'Sort queries by impressions to find where your site already appears.',
+        'Group similar queries, such as cost, location, comparison, how-to, and best options.',
+        'Match each group to an existing page or a new content idea.',
+        'Improve the page by adding direct answers, examples, headings, and helpful next steps.',
+        'Review the same query group again after a few weeks.'
+      ]
+    },
+    glossary: [
+      ['Search intent', 'The reason behind a search, such as learning, comparing, buying, or finding a local service.'],
+      ['Query group', 'Similar searches grouped together so you can plan content better.'],
+      ['Long-tail query', 'A longer, more specific search phrase.'],
+      ['Content gap', 'A useful topic people search for that your site does not answer well yet.'],
+      ['Landing page', 'A page where visitors arrive from Search or another channel.']
+    ],
+    examples: [
+      {
+        title: 'Dental implant cost queries',
+        problem: 'Queries include “dental implant cost,” “single tooth implant price,” and “is implant painful.”',
+        walkthrough: 'These are not all the same. Some ask about price, some about procedure fear. The clinic adds two sections: pricing factors and pain/comfort explanation.',
+        takeaway: 'One page can become stronger by answering multiple related concerns.'
+      },
+      {
+        title: 'Travel blog query grouping',
+        problem: 'A Himachal travel site sees queries about “best time,” “road condition,” “hotel booking,” and “itinerary.”',
+        walkthrough: 'The writer groups them into planning, safety, stay, and route. Then they update the guide with separate headings for each group.',
+        takeaway: 'Grouping queries makes content easier for readers and easier for Google to understand.'
+      }
+    ],
+    practice: [
+      'Pick one important page in Performance.',
+      'Open the Queries tab for only that page.',
+      'Copy 15 queries into a note.',
+      'Group them into 3 to 5 themes.',
+      'Write one new heading and one FAQ answer for each theme.'
+    ],
+    mistakes: [
+      'Creating a new page for every tiny query.',
+      'Stuffing repeated keywords unnaturally into the page.',
+      'Ignoring queries that reveal user worries, such as cost, safety, time, or comparison.'
+    ],
+    quiz: [
+      {
+        question: 'What is search intent?',
+        options: ['The reason behind a person’s search.', 'The number of website owners.', 'A DNS setting.'],
+        answer: 0
+      },
+      {
+        question: 'Why group similar queries?',
+        options: ['To plan better page sections and content ideas.', 'To hide data from Search Console.', 'To make every query a separate website.'],
+        answer: 0
+      },
+      {
+        question: 'What is a content gap?',
+        options: ['A useful search topic your site does not answer well.', 'A broken computer screen.', 'A paid ad budget.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Check if pages are on Google',
-    goal: 'Understand the Page indexing report.',
-    body: `
-      <p>The Page indexing report shows which URLs Google knows about and whether they are indexed. Indexed means Google has stored the page and may show it in Search.</p>
-      <h4>What to look for</h4>
-      <ul>
-        <li><strong>Indexed pages:</strong> Pages Google can show.</li>
-        <li><strong>Not indexed pages:</strong> Pages Google knows but is not showing.</li>
-        <li><strong>Reasons:</strong> Google explains why a page may not be indexed.</li>
-      </ul>
-      <div class="callout"><strong>Beginner tip:</strong> Not every page must be indexed. Thank-you pages, admin pages, duplicate pages, and filter pages often do not need to appear in Google.</div>
-      <div class="practice"><strong>Practice:</strong> Make a list of your 10 most important pages and check whether they are indexed.</div>
-    `
+    title: 'Understand Page indexing',
+    duration: '60 minutes',
+    goal: 'Learn how to check whether Google can include your pages in Search and what common indexing statuses mean.',
+    outcomes: [
+      'Explain indexing in non-technical language.',
+      'Know which pages should and should not be indexed.',
+      'Read common Page indexing reasons calmly.',
+      'Create an important-page indexing checklist.'
+    ],
+    sections: {
+      what: [
+        'Indexing means Google has stored a page in its search system and may show it in results.',
+        'The Page indexing report shows indexed and not indexed URLs Google knows about for your property.',
+        'Not every non-indexed URL is a problem. Some pages are intentionally not shown in Search.'
+      ],
+      why: [
+        'If an important service page is not indexed, it cannot bring organic search traffic from Google.',
+        'If low-value pages are indexed, they may distract from better pages or create quality problems.',
+        'The report helps you separate real issues from normal exclusions.'
+      ],
+      where: [
+        'Open Indexing, then Pages inside Search Console.',
+        'Review reasons under why pages are not indexed.',
+        'Click a reason to see examples of affected URLs.',
+        'Use URL Inspection for a single important URL.'
+      ],
+      how: [
+        'Make a list of your most important URLs first. Do not start by trying to fix every URL in the report.',
+        'Check whether each important URL is indexed.',
+        'If not indexed, read the reason and inspect the URL.',
+        'Improve weak pages, fix accidental noindex settings, repair broken links, or ask a developer for technical issues.',
+        'After fixing, use validation only when you have actually fixed the issue.'
+      ]
+    },
+    glossary: [
+      ['Indexed', 'Google has stored the page and may show it in Search.'],
+      ['Not indexed', 'Google knows about the URL but is not showing it in Search.'],
+      ['Crawl', 'Google visits a page to read it.'],
+      ['Noindex', 'A signal that tells Google not to index a page.'],
+      ['Duplicate', 'A page that is very similar to another page.']
+    ],
+    examples: [
+      {
+        title: 'Important service page missing',
+        problem: 'A “Root Canal Treatment” page is not indexed.',
+        walkthrough: 'The owner inspects the URL. If Search Console says a noindex tag is present, they ask the developer to remove it from that service page.',
+        takeaway: 'Important business pages should usually be indexable unless there is a clear reason.'
+      },
+      {
+        title: 'Thank-you page not indexed',
+        problem: 'A form thank-you page appears as not indexed.',
+        walkthrough: 'This is usually fine because users do not need to find a thank-you page from Google Search.',
+        takeaway: 'Not indexed is not automatically bad. Judge by page purpose.'
+      }
+    ],
+    practice: [
+      'Create a list of 10 important URLs.',
+      'Check each URL in Search Console.',
+      'Mark each as indexed, not indexed, or needs investigation.',
+      'For not indexed pages, write the reason shown by Google.',
+      'Choose the top 3 pages to fix first based on business importance.'
+    ],
+    mistakes: [
+      'Trying to index every URL on the website.',
+      'Ignoring important pages because the total indexed count looks fine.',
+      'Using request indexing before fixing the actual problem.'
+    ],
+    quiz: [
+      {
+        question: 'What does indexed mean?',
+        options: ['Google has stored the page and may show it in Search.', 'The page must rank number one.', 'The page has paid ads.'],
+        answer: 0
+      },
+      {
+        question: 'Is every not indexed page a problem?',
+        options: ['No. Some pages should not appear in Google Search.', 'Yes. Every URL must be indexed.', 'Only if the page is blue.'],
+        answer: 0
+      },
+      {
+        question: 'What should you check first when working on indexing?',
+        options: ['Your most important business pages.', 'Every random URL equally.', 'Only image file names.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Use URL Inspection',
-    goal: 'Check one page at a time.',
-    body: `
-      <p>The URL Inspection tool lets you check a single page. It can tell you whether Google indexed it, when Google last crawled it, and whether the live page can be indexed.</p>
-      <h4>When to use it</h4>
-      <ul>
-        <li>You published a new important page.</li>
-        <li>You updated a page and want Google to see it again.</li>
-        <li>A page is missing from Google.</li>
-        <li>You want to test the live URL.</li>
-      </ul>
-      <div class="callout"><strong>Important:</strong> Requesting indexing is not a magic ranking button. It asks Google to crawl the page, but Google decides what to index and rank.</div>
-      <div class="practice"><strong>Example:</strong> After publishing a new service page, inspect the full URL, test live URL, then request indexing if everything is okay.</div>
-    `
+    title: 'Use URL Inspection like a page detective',
+    duration: '60 minutes',
+    goal: 'Learn how to investigate one URL and decide what action to take.',
+    outcomes: [
+      'Inspect a specific URL.',
+      'Understand indexed result versus live test.',
+      'Know when to request indexing.',
+      'Explain canonical and crawl status in simple words.'
+    ],
+    sections: {
+      what: [
+        'URL Inspection gives information about one page. It can show Google’s indexed version and test the live version.',
+        'The indexed result is what Google currently knows from its stored data. The live test checks the page as it exists now.',
+        'The tool can help you troubleshoot missing pages, recent updates, indexing status, canonical choices, and page availability.'
+      ],
+      why: [
+        'Page-level investigation is better than guessing. If one important page is not performing, inspect that URL directly.',
+        'It helps you separate “Google has not visited yet” from “Google visited but found a problem.”',
+        'It is useful after publishing or updating important pages.'
+      ],
+      where: [
+        'Use the inspection search bar at the top of Search Console.',
+        'Enter the complete URL from your website.',
+        'You can also inspect URLs from many Search Console reports.'
+      ],
+      how: [
+        'Copy the exact URL from your browser.',
+        'Paste it into the URL Inspection bar.',
+        'Read the main status first: whether the URL is on Google or not.',
+        'Run a live test if you recently changed the page.',
+        'Request indexing only after the page is ready, indexable, useful, and not blocked.'
+      ]
+    },
+    glossary: [
+      ['Live URL', 'The page as it exists right now.'],
+      ['Indexed URL', 'The version Google currently has stored.'],
+      ['Canonical', 'The main version Google chooses when similar URLs exist.'],
+      ['Request indexing', 'A request for Google to crawl a URL. It is not a ranking guarantee.'],
+      ['Crawl allowed', 'Google is allowed to visit the page.']
+    ],
+    examples: [
+      {
+        title: 'Updated service page',
+        problem: 'A clinic changed prices and service details but Google still shows the old result.',
+        walkthrough: 'The owner inspects the URL, runs a live test, confirms the page is available, then requests indexing.',
+        takeaway: 'Request indexing is useful after meaningful updates, not as a daily habit.'
+      },
+      {
+        title: 'Wrong canonical selected',
+        problem: 'A page for “Delhi dental implants” appears to be treated like another similar page.',
+        walkthrough: 'URL Inspection shows Google-selected canonical. If Google chose a different URL, the pages may be too similar or internal links may point inconsistently.',
+        takeaway: 'Canonical issues often mean your pages need clearer purpose and cleaner internal linking.'
+      }
+    ],
+    practice: [
+      'Pick one important page that was recently updated.',
+      'Inspect the exact URL.',
+      'Write down whether it is on Google.',
+      'Run a live test.',
+      'If the live test is successful and the page is important, request indexing.',
+      'Write one sentence explaining the result in plain English.'
+    ],
+    mistakes: [
+      'Requesting indexing many times without improving the page.',
+      'Inspecting the wrong URL version.',
+      'Assuming live test success means the page will rank high.'
+    ],
+    quiz: [
+      {
+        question: 'What is the difference between indexed result and live test?',
+        options: ['Indexed result is Google’s stored data; live test checks the page now.', 'They are always identical.', 'Live test buys ads.'],
+        answer: 0
+      },
+      {
+        question: 'When should you request indexing?',
+        options: ['After a useful page is ready and available to Google.', 'Before creating the page.', 'Every hour for rankings.'],
+        answer: 0
+      },
+      {
+        question: 'What does canonical mean in simple terms?',
+        options: ['The main version of similar pages.', 'A website password.', 'A social media post.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Submit a sitemap',
-    goal: 'Help Google discover important pages.',
-    body: `
-      <p>A sitemap is a file on your website that lists pages you want Google to know about. Search Console has a Sitemaps report where you can submit it and check errors.</p>
-      <h4>What a sitemap does</h4>
-      <ul>
-        <li>Helps Google find pages faster.</li>
-        <li>Shows Google which URLs you consider important.</li>
-        <li>Lets you see whether Google could read the sitemap.</li>
-      </ul>
-      <div class="callout"><strong>Simple example:</strong> Many WordPress sites have a sitemap at /sitemap_index.xml or /sitemap.xml.</div>
-      <div class="practice"><strong>Practice:</strong> Ask your website platform or developer for your sitemap URL, then submit only the part after your domain in the Sitemaps report.</div>
-    `
+    title: 'Submit and monitor sitemaps',
+    duration: '60 minutes',
+    goal: 'Understand what sitemaps do, where to find them, and how to use the Sitemaps report.',
+    outcomes: [
+      'Explain a sitemap in plain English.',
+      'Know when submitting a sitemap helps.',
+      'Find common sitemap URLs.',
+      'Read basic sitemap status and errors.'
+    ],
+    sections: {
+      what: [
+        'A sitemap is a file on your website that lists URLs you want Google to know about.',
+        'Search Console’s Sitemaps report lets you submit a sitemap and see whether Google could read it.',
+        'A sitemap helps discovery, but it does not force Google to index every listed URL.'
+      ],
+      why: [
+        'Sitemaps are useful for large sites, new sites, sites with many pages, or sites where some pages are not strongly linked.',
+        'They help Google discover your important content faster.',
+        'The report can alert you if Google cannot read the sitemap.'
+      ],
+      where: [
+        'Many WordPress sites use /sitemap.xml or /sitemap_index.xml.',
+        'Shopify, Webflow, Wix, and other platforms often create sitemaps automatically.',
+        'Submit the sitemap in Search Console under Indexing, then Sitemaps.'
+      ],
+      how: [
+        'Find your sitemap URL by checking your website platform or asking your developer.',
+        'Open the sitemap in a browser to confirm it loads.',
+        'In Search Console, enter only the sitemap path if the domain is already shown.',
+        'Submit it and check whether the status is successful.',
+        'Review errors if Google could not fetch or read it.'
+      ]
+    },
+    glossary: [
+      ['Sitemap', 'A file listing important URLs on your website.'],
+      ['Sitemap index', 'A sitemap that links to other sitemaps.'],
+      ['Submitted URL', 'A URL included in a sitemap you submitted.'],
+      ['Fetch', 'Google trying to access the file.'],
+      ['XML', 'A structured file format commonly used for sitemaps.']
+    ],
+    examples: [
+      {
+        title: 'WordPress site',
+        problem: 'A business uses WordPress and Yoast SEO.',
+        walkthrough: 'They check /sitemap_index.xml, confirm it opens, then submit sitemap_index.xml in Search Console.',
+        takeaway: 'Most common platforms generate sitemaps automatically.'
+      },
+      {
+        title: 'Sitemap contains old URLs',
+        problem: 'The sitemap lists pages that were deleted months ago.',
+        walkthrough: 'The owner asks the developer or platform admin to regenerate the sitemap so it only includes current useful pages.',
+        takeaway: 'A sitemap should reflect the pages you actually want Google to discover.'
+      }
+    ],
+    practice: [
+      'Find your sitemap URL.',
+      'Open it in your browser.',
+      'Check whether it includes important pages.',
+      'Submit it in Search Console if not already submitted.',
+      'Record the status and any errors.'
+    ],
+    mistakes: [
+      'Thinking sitemap submission guarantees indexing.',
+      'Submitting broken or outdated sitemaps.',
+      'Ignoring internal links because a sitemap exists.'
+    ],
+    quiz: [
+      {
+        question: 'What does a sitemap help Google do?',
+        options: ['Discover important URLs.', 'Automatically rank every page first.', 'Create your website design.'],
+        answer: 0
+      },
+      {
+        question: 'Does submitting a sitemap guarantee indexing?',
+        options: ['No.', 'Yes, always.', 'Only for paid accounts.'],
+        answer: 0
+      },
+      {
+        question: 'Where do you submit a sitemap in Search Console?',
+        options: ['Indexing > Sitemaps.', 'Settings > Users only.', 'Google Ads billing.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Fix drops and issues calmly',
-    goal: 'Know what to check when traffic falls.',
-    body: `
-      <p>Traffic can drop for many reasons. Google’s guidance is to diagnose before reacting. First check whether the data is for the correct property and date range.</p>
-      <h4>First checks</h4>
-      <ul>
-        <li>Did you choose the correct website version?</li>
-        <li>Did the site move from http to https or change domain?</li>
-        <li>Did you recently publish, remove, or redesign pages?</li>
-        <li>Are there indexing, manual action, or security issues?</li>
-        <li>Is the drop only one page, one query, or the whole website?</li>
-      </ul>
-      <div class="callout"><strong>Beginner tip:</strong> A one-day drop is not always a problem. Compare weeks or months to see a real pattern.</div>
-      <div class="practice"><strong>Example:</strong> If only one service page dropped, inspect that page, compare queries, and check whether competitors or page changes explain it.</div>
-    `
+    title: 'Diagnose traffic drops without panic',
+    duration: '60 minutes',
+    goal: 'Learn a calm process for understanding drops in clicks, impressions, CTR, or position.',
+    outcomes: [
+      'Separate real drops from reporting confusion.',
+      'Compare date ranges correctly.',
+      'Find whether a drop is site-wide, page-specific, or query-specific.',
+      'Build a simple investigation checklist.'
+    ],
+    sections: {
+      what: [
+        'A traffic drop means one or more Performance metrics decreased. It could be clicks, impressions, CTR, average position, or a mix.',
+        'Drops can happen because of website changes, seasonality, search demand changes, Google crawling delays, technical issues, or competitors.',
+        'Google’s own guidance starts with checking whether your property definition matches your real site URL.'
+      ],
+      why: [
+        'Beginners often panic and make many changes at once. That makes the problem harder to understand.',
+        'A calm diagnosis helps you find whether the issue is tracking, indexing, demand, ranking, or content relevance.',
+        'The goal is not to blame one thing quickly. The goal is to narrow the problem.'
+      ],
+      where: [
+        'Use Performance to compare dates and isolate pages or queries.',
+        'Use Page indexing to check whether important pages became not indexed.',
+        'Use URL Inspection for specific pages that dropped.',
+        'Use Manual actions and Security issues for serious warnings.'
+      ],
+      how: [
+        'First check the property. Make sure you are looking at the correct http/https and www/non-www version or a Domain property.',
+        'Compare last 28 days to previous 28 days, or the same period last year if the business is seasonal.',
+        'Check whether impressions dropped. If impressions dropped, visibility or demand may have changed.',
+        'Check whether impressions stayed but clicks dropped. If so, CTR or search result attractiveness may be the issue.',
+        'Filter by page and query to find where the drop is concentrated.',
+        'Write one likely cause and one next action before changing the site.'
+      ]
+    },
+    glossary: [
+      ['Traffic drop', 'A decrease in visits or search performance.'],
+      ['Seasonality', 'Normal changes caused by time of year, holidays, weather, admissions cycles, and similar patterns.'],
+      ['Manual action', 'A serious Google action when a site violates search policies.'],
+      ['Security issue', 'A warning about hacked content, malware, or unsafe behavior.'],
+      ['Comparison period', 'The previous date range you compare against.']
+    ],
+    examples: [
+      {
+        title: 'HTTPS migration confusion',
+        problem: 'Clicks look like they vanished after a site moved from http to https.',
+        walkthrough: 'The owner checks the property and realizes they are still viewing the old http URL-prefix property. The data is in the https property or Domain property.',
+        takeaway: 'Sometimes traffic did not drop; you are looking in the wrong place.'
+      },
+      {
+        title: 'Seasonal admissions drop',
+        problem: 'A preschool website gets fewer clicks in July than March.',
+        walkthrough: 'The owner compares with the same period last year and sees the pattern is normal after admission season.',
+        takeaway: 'Always compare with business context, not just yesterday.'
+      }
+    ],
+    practice: [
+      'Open Performance and compare last 28 days with previous 28 days.',
+      'Write whether clicks, impressions, CTR, and position changed.',
+      'Find the top 3 pages that lost clicks.',
+      'For each page, inspect whether impressions also dropped.',
+      'Choose one page to investigate with URL Inspection.'
+    ],
+    mistakes: [
+      'Changing many pages before finding the cause.',
+      'Ignoring property mismatch after a website migration.',
+      'Assuming every drop is a penalty.'
+    ],
+    quiz: [
+      {
+        question: 'What should you check first when Search Console traffic looks missing?',
+        options: ['Whether the property matches the live site URL.', 'Whether your logo is large enough.', 'Whether your laptop is charging.'],
+        answer: 0
+      },
+      {
+        question: 'If impressions stay stable but clicks drop, what should you investigate?',
+        options: ['CTR, title relevance, and search result appeal.', 'Only DNS records.', 'Only sitemap file size.'],
+        answer: 0
+      },
+      {
+        question: 'Why compare with the same season last year?',
+        options: ['Some businesses naturally rise and fall by season.', 'It changes Google’s algorithm.', 'It deletes old data.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Share access safely',
-    goal: 'Understand owners, users, and permissions.',
-    body: `
-      <p>Search Console data can be sensitive, so access should be given carefully. A verified owner has the highest control. Users can be added with different permission levels.</p>
-      <h4>Simple roles</h4>
-      <ul>
-        <li><strong>Verified owner:</strong> Proved ownership and can manage almost everything.</li>
-        <li><strong>Delegated owner:</strong> Given owner access by another owner.</li>
-        <li><strong>Full user:</strong> Can view all data and take some actions.</li>
-        <li><strong>Restricted user:</strong> Can view limited data.</li>
-      </ul>
-      <div class="callout"><strong>Safe habit:</strong> Give agencies or freelancers the lowest access they need. Remove access when the work ends.</div>
-      <div class="practice"><strong>Practice:</strong> Review who currently has access and remove old users you no longer work with.</div>
-    `
+    title: 'Owners, users, permissions, and safety',
+    duration: '60 minutes',
+    goal: 'Know how to share Search Console access safely with employees, freelancers, agencies, and developers.',
+    outcomes: [
+      'Understand owner and user roles.',
+      'Choose the right permission level.',
+      'Review access safely.',
+      'Know why old verification tokens matter.'
+    ],
+    sections: {
+      what: [
+        'Search Console has owners and users. Owners have the most control. Users have more limited access depending on permission level.',
+        'A verified owner proved ownership. A delegated owner was given owner access by another owner.',
+        'Permissions matter because people with access can see sensitive data and sometimes take actions that affect search appearance.'
+      ],
+      why: [
+        'Businesses often give agencies, freelancers, or employees access and forget to remove it later.',
+        'Too much access creates risk. Too little access slows work. The right level protects the business while allowing useful work.',
+        'Old verification tokens can allow someone to re-verify if not removed properly.'
+      ],
+      where: [
+        'Open Settings, then Users and permissions.',
+        'Review all listed owners and users.',
+        'Check ownership verification details if removing an owner.'
+      ],
+      how: [
+        'Give owner access only to trusted people who truly need control.',
+        'Give full user access to people who need reports and some actions.',
+        'Give restricted access when someone only needs limited report visibility.',
+        'Remove users when work ends.',
+        'When removing an owner, also remove their verification token from the website, DNS, Analytics, or Tag Manager if applicable.'
+      ]
+    },
+    glossary: [
+      ['Verified owner', 'A person who proved ownership of the property.'],
+      ['Delegated owner', 'A person granted owner access by another owner.'],
+      ['Full user', 'A user who can view all data and take some actions.'],
+      ['Restricted user', 'A user with limited viewing access.'],
+      ['Verification token', 'The ownership proof that may remain after a user is removed.']
+    ],
+    examples: [
+      {
+        title: 'Agency access',
+        problem: 'A marketing agency asks for owner access to review Performance reports.',
+        walkthrough: 'The business gives full user access instead because the agency does not need ownership control.',
+        takeaway: 'Match permission level to the job.'
+      },
+      {
+        title: 'Former developer',
+        problem: 'A developer left the project but still appears as an owner.',
+        walkthrough: 'The owner removes the user and asks the current developer to remove old verification files, tags, or DNS records.',
+        takeaway: 'Removing access may require removing the old proof of ownership too.'
+      }
+    ],
+    practice: [
+      'Open Users and permissions.',
+      'List every person or account with access.',
+      'Mark who still needs access.',
+      'Decide whether each person needs owner, full, or restricted access.',
+      'Create a reminder to review access every quarter.'
+    ],
+    mistakes: [
+      'Giving owner access to everyone.',
+      'Removing a user but leaving their verification token in place.',
+      'Using one shared login instead of individual user access.'
+    ],
+    quiz: [
+      {
+        question: 'Who has the highest level of control in Search Console?',
+        options: ['Owner', 'Restricted user', 'Anonymous visitor'],
+        answer: 0
+      },
+      {
+        question: 'What should you do when an agency only needs reports?',
+        options: ['Avoid owner access and choose a lower suitable permission.', 'Give every password.', 'Delete Search Console.'],
+        answer: 0
+      },
+      {
+        question: 'Why can old verification tokens matter?',
+        options: ['They may allow re-verification if left in place.', 'They improve page speed.', 'They create blog posts.'],
+        answer: 0
+      }
+    ]
   },
   {
-    title: 'Build a monthly routine',
-    goal: 'Turn Search Console into a simple habit.',
-    body: `
-      <p>Google says you do not need to check Search Console every day. For most non-technical users, a monthly routine is enough, plus checks after major website changes.</p>
-      <h4>Your 30-minute monthly routine</h4>
-      <ol>
-        <li>Check Performance for clicks, impressions, CTR, and position.</li>
-        <li>Find top pages and top queries.</li>
-        <li>Pick one page with high impressions and low CTR.</li>
-        <li>Check Page indexing for important errors.</li>
-        <li>Review manual actions and security issues.</li>
-        <li>Write three improvements for next month.</li>
-      </ol>
-      <div class="callout"><strong>Best mindset:</strong> Search Console does not do SEO for you. It shows clues. Your job is to make better pages for real searchers.</div>
-      <div class="practice"><strong>Final task:</strong> Create a monthly note with: what improved, what dropped, what you will update, and what you learned.</div>
-    `
+    title: 'Monthly workflow and SEO action plan',
+    duration: '60 minutes',
+    goal: 'Build a repeatable monthly process that turns Search Console data into practical improvements.',
+    outcomes: [
+      'Run a 60-minute monthly Search Console review.',
+      'Prioritize pages and queries.',
+      'Create simple tasks for content, technical fixes, and reporting.',
+      'Explain progress to a client or manager.'
+    ],
+    sections: {
+      what: [
+        'A monthly workflow is a repeatable review you do to understand what improved, what dropped, and what to improve next.',
+        'The purpose is not to collect data for its own sake. The purpose is to choose better actions.',
+        'For non-technical users, the best workflow combines Performance, Page indexing, URL Inspection, and a simple task list.'
+      ],
+      why: [
+        'Checking Search Console randomly makes it hard to learn patterns.',
+        'A monthly rhythm gives enough time for content and indexing changes to show early signals.',
+        'A clear report helps teams understand SEO without technical confusion.'
+      ],
+      where: [
+        'Use Performance for traffic and query insights.',
+        'Use Page indexing for important page availability.',
+        'Use URL Inspection for pages you changed or pages that concern you.',
+        'Use your own notes, spreadsheet, or project tool to track actions.'
+      ],
+      how: [
+        'Spend 10 minutes reviewing total clicks, impressions, CTR, and average position.',
+        'Spend 10 minutes finding winning pages and declining pages.',
+        'Spend 10 minutes finding query opportunities.',
+        'Spend 10 minutes checking indexing for important pages.',
+        'Spend 10 minutes choosing content improvements.',
+        'Spend 10 minutes writing a plain-English summary and next tasks.'
+      ]
+    },
+    glossary: [
+      ['SEO action plan', 'A short list of improvements based on search data.'],
+      ['Priority page', 'A page that matters strongly to business results.'],
+      ['Opportunity query', 'A search where you already appear but can improve clicks or ranking.'],
+      ['Baseline', 'The starting numbers you compare future results against.'],
+      ['Monthly report', 'A short summary of results, learnings, and next actions.']
+    ],
+    examples: [
+      {
+        title: 'Small business monthly report',
+        problem: 'The owner needs a simple SEO update for the month.',
+        walkthrough: 'They report: clicks up 12%, impressions up 20%, CTR down slightly. Three pages improved. One service page has high impressions and low CTR, so next month’s task is title and intro improvement.',
+        takeaway: 'A good report explains what happened and what will be done next.'
+      },
+      {
+        title: 'Content update plan',
+        problem: 'A blog has many impressions for comparison queries but few clicks.',
+        walkthrough: 'The writer creates a task: update the blog with a comparison table, clearer title, and FAQ answers from the query list.',
+        takeaway: 'Search Console should lead to visible page improvements.'
+      }
+    ],
+    practice: [
+      'Create a monthly Search Console review document.',
+      'Add sections: Wins, Drops, Opportunities, Indexing issues, Next actions.',
+      'Choose 3 pages to improve this month.',
+      'For each page, write one query target and one content change.',
+      'Schedule the next review date.'
+    ],
+    mistakes: [
+      'Sending only screenshots without interpretation.',
+      'Choosing too many tasks and finishing none.',
+      'Measuring success only by rankings instead of useful traffic and page quality.'
+    ],
+    quiz: [
+      {
+        question: 'What is the main purpose of a monthly Search Console workflow?',
+        options: ['Turn data into practical website improvements.', 'Collect screenshots only.', 'Avoid looking at pages.'],
+        answer: 0
+      },
+      {
+        question: 'What should a useful SEO report include?',
+        options: ['What changed, what it means, and next actions.', 'Only a random graph.', 'Only technical words.'],
+        answer: 0
+      },
+      {
+        question: 'How many priority actions are usually better for a beginner monthly plan?',
+        options: ['A small focused list, such as three actions.', 'Hundreds of unrelated tasks.', 'No actions at all.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Final case study: run Search Console for a real website',
+    duration: '60 minutes',
+    goal: 'Combine every lesson into a complete beginner-friendly Search Console audit and action plan.',
+    outcomes: [
+      'Review setup, performance, queries, indexing, and page issues.',
+      'Make decisions from examples instead of memorizing reports.',
+      'Prepare a simple action plan for a real or sample website.',
+      'Finish the course with a reusable audit template.'
+    ],
+    sections: {
+      what: [
+        'The final lesson is a complete workflow. You will act like a Search Console manager for a website.',
+        'You will check whether the account is set up correctly, understand search performance, find query opportunities, check important pages, and create actions.',
+        'This is the difference between learning reports and using reports.'
+      ],
+      why: [
+        'A paid course should end with confidence. You should know where to click, what each report means, and what to do next.',
+        'The final case study trains you to think in plain English: What happened? Why might it happen? Where do I check? How do I improve it?',
+        'This approach works for clinics, schools, travel websites, local services, ecommerce stores, blogs, and small business websites.'
+      ],
+      where: [
+        'Use Search Console for the website property.',
+        'Use your website pages in a browser to compare data with real content.',
+        'Use a note or spreadsheet to create the final action plan.'
+      ],
+      how: [
+        'Step 1: Confirm property and verification.',
+        'Step 2: Review Performance for 3 months.',
+        'Step 3: Find top pages, top queries, and opportunity queries.',
+        'Step 4: Check Page indexing for important pages.',
+        'Step 5: Inspect one newly updated page and one missing or weak page.',
+        'Step 6: Write a 30-day action plan with owners and due dates.',
+        'Step 7: Schedule the next monthly review.'
+      ]
+    },
+    glossary: [
+      ['Audit', 'A structured review that finds issues and opportunities.'],
+      ['Action owner', 'The person responsible for completing a task.'],
+      ['Due date', 'The date a task should be completed.'],
+      ['Business impact', 'How much a page or issue matters to leads, sales, bookings, or trust.'],
+      ['Next review', 'The planned date to check results again.']
+    ],
+    examples: [
+      {
+        title: 'Clinic case study',
+        problem: 'A clinic wants more bookings from Google Search.',
+        walkthrough: 'The audit finds that treatment pages get impressions but low CTR. Some pages are indexed, but one important page is missing. The plan is to improve titles, add patient-friendly FAQs, inspect the missing URL, and review results next month.',
+        takeaway: 'Good Search Console work connects search data to business pages.'
+      },
+      {
+        title: 'Travel blog case study',
+        problem: 'A travel blog has many impressions but traffic is flat.',
+        walkthrough: 'The audit finds query groups around weather, routes, permits, and budget. The plan is to update old guides with clearer sections and add internal links between related guides.',
+        takeaway: 'Query data can become an editorial calendar.'
+      }
+    ],
+    practice: [
+      'Complete the full audit checklist on a real website or sample website.',
+      'Write a one-page summary in plain English.',
+      'Choose 5 action items: 2 content, 1 indexing, 1 title/CTR, 1 access or setup.',
+      'Assign an owner and due date to each action.',
+      'Set the next review date 30 days later.'
+    ],
+    mistakes: [
+      'Finishing the audit without assigning next actions.',
+      'Using technical language that a client or owner cannot understand.',
+      'Forgetting to re-check whether changes helped.'
+    ],
+    quiz: [
+      {
+        question: 'What should the final audit produce?',
+        options: ['A plain-English action plan.', 'Only a list of confusing terms.', 'A new domain name.'],
+        answer: 0
+      },
+      {
+        question: 'Why assign owners and due dates?',
+        options: ['So the plan becomes real work, not just notes.', 'To change Google’s logo.', 'To hide Search Console data.'],
+        answer: 0
+      },
+      {
+        question: 'What is the best final mindset?',
+        options: ['Use data to improve useful pages for real searchers.', 'Chase every number every hour.', 'Only focus on one keyword forever.'],
+        answer: 0
+      }
+    ]
   }
 ];
 
-const quiz = {
-  question: 'A page has 10,000 impressions and 50 clicks. What is the simplest meaning?',
-  options: [
-    { text: 'Many people saw the result, but only a small number clicked it.', correct: true },
-    { text: 'Google has blocked the website completely.', correct: false },
-    { text: 'The website must be number 1 for every search.', correct: false }
-  ]
-};
-
 let activeLesson = 0;
+let completedLessons = new Set(JSON.parse(localStorage.getItem(storageKey) || '[]'));
+let quizState = {};
 
 const lessonContent = document.querySelector('#lesson-content');
 const tabs = [...document.querySelectorAll('.lesson-tab')];
@@ -178,58 +967,262 @@ const counter = document.querySelector('#lesson-counter');
 const progressBar = document.querySelector('#progress-bar');
 const prevButton = document.querySelector('#prev-lesson');
 const nextButton = document.querySelector('#next-lesson');
+const completeButton = document.querySelector('#complete-lesson');
+const resetButton = document.querySelector('#reset-progress');
+
+function saveProgress() {
+  localStorage.setItem(storageKey, JSON.stringify([...completedLessons].sort((a, b) => a - b)));
+}
+
+function isUnlocked(index) {
+  return index === 0 || completedLessons.has(index - 1);
+}
+
+function listItems(items) {
+  return `<ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
+}
+
+function renderTextBlocks(items) {
+  return items.map((item) => `<p>${item}</p>`).join('');
+}
+
+function renderGlossary(items) {
+  return `
+    <div class="lesson-term-grid">
+      ${items
+        .map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`)
+        .join('')}
+    </div>
+  `;
+}
+
+function renderExamples(items) {
+  return `
+    <div class="lesson-example-grid">
+      ${items
+        .map(
+          (item) => `
+            <article class="lesson-example">
+              <h5>${item.title}</h5>
+              <p><strong>Problem:</strong> ${item.problem}</p>
+              <p><strong>Walkthrough:</strong> ${item.walkthrough}</p>
+              <p><strong>Takeaway:</strong> ${item.takeaway}</p>
+            </article>
+          `
+        )
+        .join('')}
+    </div>
+  `;
+}
+
+function renderQuiz(lesson, lessonIndex) {
+  return `
+    <div class="lesson-quiz" data-lesson-quiz="${lessonIndex}">
+      ${lesson.quiz
+        .map(
+          (question, questionIndex) => `
+            <fieldset class="quiz-question" data-question="${questionIndex}">
+              <legend>${questionIndex + 1}. ${question.question}</legend>
+              <div class="quiz-options">
+                ${question.options
+                  .map(
+                    (option, optionIndex) => `
+                      <button type="button" class="quiz-option" data-question="${questionIndex}" data-option="${optionIndex}">
+                        ${option}
+                      </button>
+                    `
+                  )
+                  .join('')}
+              </div>
+              <p class="quiz-feedback" data-feedback="${questionIndex}"></p>
+            </fieldset>
+          `
+        )
+        .join('')}
+      <p class="quiz-status" id="quiz-status">Answer all quiz questions correctly to unlock completion.</p>
+    </div>
+  `;
+}
+
+function renderLocked(index) {
+  const previous = lessons[index - 1]?.title || 'the previous lesson';
+  lessonContent.innerHTML = `
+    <div class="locked-panel">
+      <p class="eyebrow">Locked lesson</p>
+      <h3>${lessons[index].title}</h3>
+      <p>This lesson is locked. Complete “${previous}” first, including its quiz, to unlock this module.</p>
+    </div>
+  `;
+}
 
 function renderLesson(index) {
   activeLesson = Math.max(0, Math.min(index, lessons.length - 1));
   const lesson = lessons[activeLesson];
-  lessonContent.innerHTML = `
-    <h3>${lesson.title}</h3>
-    <p><strong>Goal:</strong> ${lesson.goal}</p>
-    ${lesson.body}
-  `;
-  counter.textContent = `Lesson ${activeLesson + 1} of ${lessons.length}`;
-  progressBar.style.width = `${((activeLesson + 1) / lessons.length) * 100}%`;
+  const unlocked = isUnlocked(activeLesson);
+  const completed = completedLessons.has(activeLesson);
+  const progress = Math.round((completedLessons.size / lessons.length) * 100);
+
+  counter.textContent = `${completedLessons.size} of ${lessons.length} lessons complete`;
+  progressBar.style.width = `${progress}%`;
+
   tabs.forEach((tab, tabIndex) => {
+    const tabUnlocked = isUnlocked(tabIndex);
+    const tabCompleted = completedLessons.has(tabIndex);
     tab.classList.toggle('active', tabIndex === activeLesson);
+    tab.classList.toggle('locked', !tabUnlocked);
+    tab.classList.toggle('completed', tabCompleted);
+    tab.disabled = !tabUnlocked;
+    tab.textContent = `${tabCompleted ? '[Done] ' : tabUnlocked ? '' : '[Locked] '}${tab.dataset.title || tab.textContent.replace(/^\\[Done\\] |^\\[Locked\\] /, '')}`;
   });
+
   prevButton.disabled = activeLesson === 0;
-  nextButton.textContent = activeLesson === lessons.length - 1 ? 'Back to lesson 1' : 'Next lesson';
+  nextButton.disabled = !isUnlocked(activeLesson + 1) && activeLesson < lessons.length - 1;
+  nextButton.textContent = activeLesson === lessons.length - 1 ? 'Course complete' : 'Next lesson';
+  completeButton.disabled = completed || !unlocked;
+  completeButton.textContent = completed ? 'Lesson completed' : 'Complete lesson';
+
+  if (!unlocked) {
+    renderLocked(activeLesson);
+    return;
+  }
+
+  quizState = {};
+  lessonContent.innerHTML = `
+    <div class="lesson-header">
+      <p class="eyebrow">Lesson ${activeLesson + 1} • ${lesson.duration}</p>
+      <h3>${lesson.title}</h3>
+      <p><strong>Goal:</strong> ${lesson.goal}</p>
+    </div>
+
+    <div class="lesson-meta">
+      <div><strong>0-10 min</strong><span>Concept and terminology</span></div>
+      <div><strong>10-25 min</strong><span>Why it matters</span></div>
+      <div><strong>25-40 min</strong><span>How and where to use it</span></div>
+      <div><strong>40-50 min</strong><span>Examples and practice</span></div>
+      <div><strong>50-60 min</strong><span>Quiz and completion</span></div>
+    </div>
+
+    <section class="lesson-section">
+      <h4>Learning outcomes</h4>
+      ${listItems(lesson.outcomes)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>What this means</h4>
+      ${renderTextBlocks(lesson.sections.what)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>Why this matters</h4>
+      ${renderTextBlocks(lesson.sections.why)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>Where you use it in Search Console</h4>
+      ${renderTextBlocks(lesson.sections.where)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>How to do it step by step</h4>
+      ${listItems(lesson.sections.how)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>Terminology and glossary</h4>
+      ${renderGlossary(lesson.glossary)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>Examples</h4>
+      ${renderExamples(lesson.examples)}
+    </section>
+
+    <section class="lesson-section">
+      <h4>Hands-on practice</h4>
+      <div class="practice">${listItems(lesson.practice)}</div>
+    </section>
+
+    <section class="lesson-section">
+      <h4>Common beginner mistakes</h4>
+      <div class="callout">${listItems(lesson.mistakes)}</div>
+    </section>
+
+    <section class="lesson-section">
+      <h4>Lesson quiz</h4>
+      ${renderQuiz(lesson, activeLesson)}
+    </section>
+  `;
+
+  bindQuiz();
+}
+
+function bindQuiz() {
+  const lesson = lessons[activeLesson];
+  document.querySelectorAll('.quiz-option').forEach((button) => {
+    button.addEventListener('click', () => {
+      const questionIndex = Number(button.dataset.question);
+      const optionIndex = Number(button.dataset.option);
+      const question = lesson.quiz[questionIndex];
+      const fieldset = button.closest('.quiz-question');
+      const feedback = fieldset.querySelector(`[data-feedback="${questionIndex}"]`);
+      const buttons = [...fieldset.querySelectorAll('.quiz-option')];
+      const correct = optionIndex === question.answer;
+
+      buttons.forEach((item) => {
+        item.classList.remove('correct', 'incorrect');
+      });
+      button.classList.add(correct ? 'correct' : 'incorrect');
+      if (!correct) {
+        buttons[question.answer].classList.add('correct');
+      }
+
+      quizState[questionIndex] = correct;
+      feedback.textContent = correct ? 'Correct.' : `Not quite. Correct answer: ${question.options[question.answer]}`;
+      updateQuizStatus();
+    });
+  });
+  updateQuizStatus();
+}
+
+function updateQuizStatus() {
+  const lesson = lessons[activeLesson];
+  const correctCount = lesson.quiz.filter((_, index) => quizState[index]).length;
+  const passed = correctCount === lesson.quiz.length;
+  const status = document.querySelector('#quiz-status');
+  const completed = completedLessons.has(activeLesson);
+  if (status) {
+    status.textContent = completed
+      ? 'Lesson completed. You can review this quiz anytime.'
+      : passed
+      ? 'Quiz passed. You can complete this lesson now.'
+      : `${correctCount} of ${lesson.quiz.length} correct. Answer all correctly to complete this lesson.`;
+  }
+  completeButton.disabled = completed || !passed;
 }
 
 tabs.forEach((tab) => {
+  tab.dataset.title = tab.textContent;
   tab.addEventListener('click', () => renderLesson(Number(tab.dataset.lesson)));
 });
 
 prevButton.addEventListener('click', () => renderLesson(activeLesson - 1));
+
 nextButton.addEventListener('click', () => {
-  if (activeLesson === lessons.length - 1) {
-    renderLesson(0);
-    return;
+  if (activeLesson < lessons.length - 1 && isUnlocked(activeLesson + 1)) {
+    renderLesson(activeLesson + 1);
   }
-  renderLesson(activeLesson + 1);
 });
 
-const quizQuestion = document.querySelector('#quiz-question');
-const quizOptions = document.querySelector('#quiz-options');
-const quizFeedback = document.querySelector('#quiz-feedback');
+completeButton.addEventListener('click', () => {
+  completedLessons.add(activeLesson);
+  saveProgress();
+  renderLesson(activeLesson);
+});
 
-quizQuestion.textContent = quiz.question;
-quiz.options.forEach((option) => {
-  const button = document.createElement('button');
-  button.type = 'button';
-  button.textContent = option.text;
-  button.addEventListener('click', () => {
-    [...quizOptions.children].forEach((child) => {
-      child.disabled = true;
-      const answer = quiz.options.find((item) => item.text === child.textContent);
-      child.classList.toggle('correct', answer.correct);
-    });
-    button.classList.toggle('incorrect', !option.correct);
-    quizFeedback.textContent = option.correct
-      ? 'Correct. This is a CTR opportunity: improve the result so more people want to click.'
-      : 'Not quite. The main clue is high visibility but low clicks.';
-  });
-  quizOptions.append(button);
+resetButton.addEventListener('click', () => {
+  completedLessons = new Set();
+  saveProgress();
+  renderLesson(0);
 });
 
 renderLesson(0);
