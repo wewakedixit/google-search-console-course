@@ -1761,6 +1761,8 @@ let activeStudentId = null;
 let lessonTimer = null;
 let testTimer = null;
 let activeTest = null;
+let dashboardCourseTab = 'all';
+let dashboardStatsPeriod = 'weekly';
 
 const seedState = {
   users: [
@@ -1883,6 +1885,148 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+}
+
+function courseStudySeconds(userId, courseId) {
+  return Object.values(userLessonTime(userId, courseId)).reduce((sum, value) => sum + value, 0);
+}
+
+function courseProgressPercent(userId, targetCourse) {
+  const completed = userProgress(userId, targetCourse.id).completedLessons.length;
+  return Math.round((completed / targetCourse.lessons.length) * 100);
+}
+
+function isCourseCompleted(userId, targetCourse) {
+  return userProgress(userId, targetCourse.id).completedLessons.length === targetCourse.lessons.length;
+}
+
+function isCourseInProgress(userId, targetCourse) {
+  const completed = userProgress(userId, targetCourse.id).completedLessons.length;
+  return completed > 0 && completed < targetCourse.lessons.length;
+}
+
+function dashboardCourseRows(user, assignedIds) {
+  const assignedSet = new Set(assignedIds);
+  if (dashboardCourseTab === 'assigned') {
+    return courses.filter((item) => assignedSet.has(item.id));
+  }
+  if (dashboardCourseTab === 'completed') {
+    return courses.filter((item) => assignedSet.has(item.id) && isCourseCompleted(user.id, item));
+  }
+  return courses;
+}
+
+function dashboardStudySeries(userId, assignedCourses, period) {
+  const totalHours = assignedCourses.reduce((sum, item) => sum + (courseStudySeconds(userId, item.id) / 3600), 0);
+  const base = Math.max(totalHours, 0.2);
+  const seriesByPeriod = {
+    day: {
+      labels: ['8a', '10a', '12p', '2p', '4p', '6p'],
+      values: [0, base * 0.25, base * 0.1, base * 0.3, base * 0.2, base * 0.15]
+    },
+    weekly: {
+      labels: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
+      values: [base * 0.1, base * 0.2, base * 0.25, base * 0.08, base * 0.32, base * 0.22, base * 0.16]
+    },
+    monthly: {
+      labels: ['wk 1', 'wk 2', 'wk 3', 'wk 4'],
+      values: [base * 0.55, base * 0.8, base * 0.45, base]
+    },
+    quarterly: {
+      labels: ['month 1', 'month 2', 'month 3'],
+      values: [base * 0.75, base, base * 0.6]
+    }
+  };
+  const selected = seriesByPeriod[period] || seriesByPeriod.weekly;
+  const max = Math.max(...selected.values, 1);
+  return {
+    labels: selected.labels,
+    values: selected.values.map((value) => Number(value.toFixed(1))),
+    heights: selected.values.map((value) => Math.max(8, Math.round((value / max) * 78)))
+  };
+}
+
+function dashboardNotifications(user, assignedCourses) {
+  const assigned = assignedCourses.map((item) => ({
+    type: 'Course assigned',
+    text: `${item.title} is available on your dashboard.`
+  }));
+  const completed = assignedCourses
+    .filter((item) => isCourseCompleted(user.id, item))
+    .map((item) => ({
+      type: 'Course completed',
+      text: `Your ${item.title} certificate is ready.`
+    }));
+  const retakes = state.attempts
+    .filter((attempt) => attempt.userId === user.id && !attempt.passed)
+    .slice(-3)
+    .reverse()
+    .map((attempt) => ({
+      type: 'Retake test',
+      text: `${getCourse(attempt.courseId).title}, lesson ${attempt.lessonIndex + 1} needs another attempt.`
+    }));
+  return [...retakes, ...completed, ...assigned].slice(0, 6);
+}
+
+function escapePdfText(value) {
+  return String(value).replaceAll('\\', '\\\\').replaceAll('(', '\\(').replaceAll(')', '\\)');
+}
+
+function createPdfBlob(lines) {
+  const body = [
+    'BT',
+    '/F1 34 Tf',
+    '72 720 Td',
+    `(${escapePdfText(lines[0])}) Tj`,
+    '/F1 18 Tf',
+    '0 -58 Td',
+    `(${escapePdfText(lines[1])}) Tj`,
+    '0 -34 Td',
+    `(${escapePdfText(lines[2])}) Tj`,
+    '0 -34 Td',
+    `(${escapePdfText(lines[3])}) Tj`,
+    '0 -70 Td',
+    '/F1 14 Tf',
+    `(${escapePdfText(lines[4])}) Tj`,
+    'ET'
+  ].join('\n');
+  const objects = [
+    '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n',
+    '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n',
+    '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n',
+    '4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>\nendobj\n',
+    `5 0 obj\n<< /Length ${body.length} >>\nstream\n${body}\nendstream\nendobj\n`
+  ];
+  let pdf = '%PDF-1.4\n';
+  const offsets = [0];
+  objects.forEach((object) => {
+    offsets.push(pdf.length);
+    pdf += object;
+  });
+  const xrefOffset = pdf.length;
+  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+  offsets.slice(1).forEach((offset) => {
+    pdf += `${String(offset).padStart(10, '0')} 00000 n \n`;
+  });
+  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+  return new Blob([pdf], {type: 'application/pdf'});
+}
+
+function downloadCertificate(user, targetCourse) {
+  const date = new Date().toLocaleDateString();
+  const blob = createPdfBlob([
+    'Certificate of Completion',
+    `This certifies that ${user.name}`,
+    `completed ${targetCourse.title}`,
+    `Issued by NextSkills on ${date}`,
+    'Generated from the NextSkills learning dashboard.'
+  ]);
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `${targetCourse.title.replaceAll(' ', '-')}-${user.name.replaceAll(' ', '-')}-certificate.pdf`;
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 function shuffle(items) {
@@ -2033,18 +2177,21 @@ function renderLogin() {
 function renderDashboard(user) {
   const assigned = state.assignments[user.id] || [];
   const assignedCourses = courses.filter((item) => assigned.includes(item.id));
-  const completed = assignedCourses.reduce((sum, item) => sum + userProgress(user.id, item.id).completedLessons.length, 0);
+  const assignedSet = new Set(assigned);
+  const completedLessons = assignedCourses.reduce((sum, item) => sum + userProgress(user.id, item.id).completedLessons.length, 0);
   const totalLessons = assignedCourses.reduce((sum, item) => sum + item.lessons.length, 0) || 1;
-  const progressPercent = Math.round((completed / totalLessons) * 100);
-  const totalStudyTime = assignedCourses.reduce((sum, item) => sum + Object.values(userLessonTime(user.id, item.id)).reduce((innerSum, value) => innerSum + value, 0), 0);
+  const progressPercent = Math.round((completedLessons / totalLessons) * 100);
   const latestAttempt = state.attempts.filter((attempt) => attempt.userId === user.id).at(-1);
   const now = new Date();
-  const activeCourse = assignedCourses[0];
+  const activeCourse = assignedCourses.find((item) => isCourseInProgress(user.id, item)) || assignedCourses.find((item) => !isCourseCompleted(user.id, item));
   const activeCompleted = activeCourse ? userProgress(user.id, activeCourse.id).completedLessons.length : 0;
-  const activeProgress = activeCourse ? Math.round((activeCompleted / activeCourse.lessons.length) * 100) : 0;
-  const completedCourses = assignedCourses.filter((item) => userProgress(user.id, item.id).completedLessons.length === item.lessons.length).length;
-  const inProgressCourses = assignedCourses.length - completedCourses;
-  const weeklyHours = [0.5, 1.5, 2.5, 1, 4, 3, 2];
+  const activeProgress = activeCourse ? courseProgressPercent(user.id, activeCourse) : 0;
+  const completedCourses = assignedCourses.filter((item) => isCourseCompleted(user.id, item)).length;
+  const inProgressCourses = assignedCourses.filter((item) => isCourseInProgress(user.id, item)).length;
+  const courseRows = dashboardCourseRows(user, assigned);
+  const notifications = dashboardNotifications(user, assignedCourses);
+  const stats = dashboardStudySeries(user.id, assignedCourses, dashboardStatsPeriod);
+  const maxChartIndex = Math.max(stats.values.length - 1, 1);
   renderShell(user, `
     <section class="learning-dashboard">
       <aside class="learner-rail" aria-label="Student navigation">
@@ -2063,56 +2210,82 @@ function renderDashboard(user) {
             <h1>Hello ${escapeHtml(user.name.split(' ')[0] || user.name)}!</h1>
             <p>It’s good to see you again. Continue your assigned courses from here.</p>
           </div>
-          <div class="student-illustration" aria-hidden="true">
-            <span class="head"></span><span class="hair"></span><span class="body"></span><span class="arm"></span><span class="hand">✋</span>
-          </div>
+          <img class="student-illustration-img" src="/hello-user.png" alt="" />
         </section>
 
-        ${activeCourse ? `
-          <section class="continue-card">
-            <div class="course-icon">${activeCourse.title.includes('Ads') ? 'Ads' : 'GSC'}</div>
-            <div>
-              <h2>${activeCourse.title}</h2>
-              <p>${activeCourse.lessons.length} lessons • ${secondsToClock(Object.values(userLessonTime(user.id, activeCourse.id)).reduce((sum, value) => sum + value, 0))} studied</p>
-            </div>
-            <div class="mini-progress" style="--progress:${activeProgress}%"><span>${activeProgress}%</span></div>
-            <button class="button primary" data-open-course="${activeCourse.id}">Continue</button>
-          </section>
-        ` : ''}
+        <section class="dashboard-course-section">
+          <div class="section-row">
+            <h2>In Progress</h2>
+            ${activeCourse ? `<span class="status-pill">${activeProgress}% covered</span>` : ''}
+          </div>
+          ${activeCourse ? `
+            <section class="continue-card">
+              <div class="course-icon">${activeCourse.title.includes('Ads') ? 'Ads' : 'GSC'}</div>
+              <div>
+                <h2>${activeCourse.title}</h2>
+                <p>${activeCompleted}/${activeCourse.lessons.length} lessons complete • ${secondsToClock(courseStudySeconds(user.id, activeCourse.id))} studied</p>
+                <div class="inline-progress"><span style="width:${activeProgress}%"></span></div>
+              </div>
+              <div class="mini-progress" style="--progress:${activeProgress}%"><span>${activeProgress}%</span></div>
+              <button class="button primary" data-open-course="${activeCourse.id}">Continue</button>
+            </section>
+          ` : '<article class="empty-card">No course is in progress yet. Start an assigned course to see it here.</article>'}
+        </section>
 
         <section class="dashboard-course-section">
           <div class="section-row">
             <h2>Courses</h2>
-            <div class="course-tabs"><span>All Courses</span><span>Assigned</span><span>In Progress</span></div>
+            <div class="course-tabs" role="tablist" aria-label="Course filters">
+              <button class="${dashboardCourseTab === 'all' ? 'active' : ''}" data-dashboard-tab="all">All Courses</button>
+              <button class="${dashboardCourseTab === 'assigned' ? 'active' : ''}" data-dashboard-tab="assigned">Assigned</button>
+              <button class="${dashboardCourseTab === 'completed' ? 'active' : ''}" data-dashboard-tab="completed">Completed</button>
+            </div>
           </div>
           <div class="course-list learning-course-list">
-            ${assignedCourses.length
-              ? assignedCourses.map((item) => {
+            ${courseRows.length
+              ? courseRows.map((item) => {
+                const isAssigned = assignedSet.has(item.id);
                 const itemCompleted = userProgress(user.id, item.id).completedLessons.length;
                 const itemTime = Object.values(userLessonTime(user.id, item.id)).reduce((sum, value) => sum + value, 0);
                 const itemAttempts = state.attempts.filter((attempt) => attempt.userId === user.id && attempt.courseId === item.id);
+                const itemProgress = courseProgressPercent(user.id, item);
+                const completedCourse = isAssigned && isCourseCompleted(user.id, item);
                 return `
                   <article class="course-card learning-course-card">
                     <div class="course-icon">${item.title.includes('Ads') ? 'Ads' : 'GSC'}</div>
                     <div>
                       <h3>${item.title}</h3>
                       <p>${item.subtitle}</p>
-                      <small>${itemCompleted}/${item.lessons.length} complete • ${secondsToClock(itemTime)} study • ${itemAttempts.length} attempts</small>
+                      <small>${isAssigned ? `${itemCompleted}/${item.lessons.length} complete • ${itemProgress}% covered • ${secondsToClock(itemTime)} study • ${itemAttempts.length} attempts` : `${item.lessons.length} lessons • Not assigned yet`}</small>
                     </div>
                     <span class="course-rating">★ ${Math.max(4.6, 5 - (itemAttempts.length * 0.1)).toFixed(1)}</span>
-                    <button class="button primary" data-open-course="${item.id}">View course</button>
+                    ${completedCourse && dashboardCourseTab === 'completed'
+                      ? `<button class="button primary" data-certificate-course="${item.id}">View Certificate</button>`
+                      : isAssigned
+                        ? `<button class="button primary" data-open-course="${item.id}">View course</button>`
+                        : `<button class="button secondary" data-request-course="${item.id}">Request course</button>`}
                   </article>
                 `;
               }).join('')
-              : '<article class="empty-card">No course assigned yet. Please contact your admin.</article>'}
+              : `<article class="empty-card">${dashboardCourseTab === 'completed' ? 'No completed courses yet. Finish every lesson test in a course to unlock its certificate.' : 'No courses found for this filter.'}</article>`}
           </div>
         </section>
       </div>
 
       <aside class="learning-side">
         <div class="top-tools">
-          <div class="search-pill">⌕</div>
-          <div class="notification">♧<span>1</span></div>
+          <div class="notification-wrap">
+            <button class="notification" data-toggle-notifications aria-label="Notifications">&#128276;<span>${notifications.length}</span></button>
+            <div class="notification-panel" hidden>
+              <h3>Notifications</h3>
+              ${notifications.length ? notifications.map((item) => `
+                <article>
+                  <strong>${item.type}</strong>
+                  <p>${escapeHtml(item.text)}</p>
+                </article>
+              `).join('') : '<p>No notifications yet.</p>'}
+            </div>
+          </div>
           <div class="avatar">${escapeHtml((user.name[0] || 'S').toUpperCase())}</div>
         </div>
 
@@ -2124,14 +2297,19 @@ function renderDashboard(user) {
         <section class="stats-panel">
           <div class="section-row">
             <h2>Your statistics</h2>
-            <span class="week-pill">Weekly⌄</span>
+            <select class="week-pill" data-stats-period aria-label="Statistics period">
+              <option value="day" ${dashboardStatsPeriod === 'day' ? 'selected' : ''}>Day</option>
+              <option value="weekly" ${dashboardStatsPeriod === 'weekly' ? 'selected' : ''}>Weekly</option>
+              <option value="monthly" ${dashboardStatsPeriod === 'monthly' ? 'selected' : ''}>Monthly</option>
+              <option value="quarterly" ${dashboardStatsPeriod === 'quarterly' ? 'selected' : ''}>Quarterly</option>
+            </select>
           </div>
           <div class="stats-tabs"><span>Learning Hours</span><span>My Courses</span></div>
-          <div class="learning-chart">
-            ${weeklyHours.map((hour, index) => `
-              <div class="chart-point" style="--x:${index};--h:${hour};"><span>${String(hour).replace('.5', ',5')}h</span></div>
+          <div class="learning-chart" style="--chart-count:${stats.values.length}">
+            ${stats.values.map((hour, index) => `
+              <div class="chart-point" style="--x:${(index / maxChartIndex) * 96};--h:${stats.heights[index]};"><span>${String(hour).replace('.5', ',5')}h</span></div>
             `).join('')}
-            <div class="chart-days"><span>mon</span><span>tue</span><span>wed</span><span>thu</span><span>fri</span><span>sat</span><span>sun</span></div>
+            <div class="chart-days">${stats.labels.map((label) => `<span>${label}</span>`).join('')}</div>
           </div>
         </section>
 
@@ -2141,28 +2319,32 @@ function renderDashboard(user) {
           <article><strong>${progressPercent}%</strong><span>Progress</span></article>
           <article><strong>${latestAttempt ? `${latestAttempt.correct}/10` : '-'}</strong><span>Latest score</span></article>
         </section>
-
-        <section class="stress-card dashboard-stress-card">
-          <div>
-            <h2>Stress relief</h2>
-            <p>Play X/O with the computer.</p>
-          </div>
-          <div class="xo-game">
-            <div class="xo-board">
-              ${Array.from({length: 9}).map((_, index) => `<button type="button" data-xo-cell="${index}" aria-label="Cell ${index + 1}"></button>`).join('')}
-            </div>
-            <p id="xo-status">Your turn. You are X.</p>
-            <button class="button secondary" data-reset-xo>Reset</button>
-          </div>
-        </section>
       </aside>
     </section>
   `);
+  document.querySelectorAll('[data-dashboard-tab]').forEach((button) => button.addEventListener('click', () => {
+    dashboardCourseTab = button.dataset.dashboardTab;
+    renderDashboard(user);
+  }));
+  document.querySelector('[data-stats-period]')?.addEventListener('change', (event) => {
+    dashboardStatsPeriod = event.currentTarget.value;
+    renderDashboard(user);
+  });
+  document.querySelector('[data-toggle-notifications]')?.addEventListener('click', () => {
+    const panel = document.querySelector('.notification-panel');
+    if (panel) panel.hidden = !panel.hidden;
+  });
   document.querySelectorAll('[data-open-course]').forEach((button) => button.addEventListener('click', () => {
     route = {view: 'course', courseId: button.dataset.openCourse, lesson: 0};
     render();
   }));
-  bindXoGame();
+  document.querySelectorAll('[data-request-course]').forEach((button) => button.addEventListener('click', () => {
+    const requestedCourse = getCourse(button.dataset.requestCourse);
+    alert(`Request sent for ${requestedCourse.title}. Your admin can assign it from the backend.`);
+  }));
+  document.querySelectorAll('[data-certificate-course]').forEach((button) => button.addEventListener('click', () => {
+    downloadCertificate(user, getCourse(button.dataset.certificateCourse));
+  }));
 }
 
 function bindXoGame() {
