@@ -2864,43 +2864,90 @@ function renderLesson(user) {
   }
   startLessonTimer(user.id, lessonIndex);
   const completed = userProgress(user.id).completedLessons;
+  const coursePercent = Math.round((completed.length / course.lessons.length) * 100);
+  const nextLessonIndex = Math.min(course.lessons.length - 1, lessonIndex + 1);
+  const canOpenNext = lessonIndex < course.lessons.length - 1 && isLessonUnlocked(user.id, nextLessonIndex);
   renderShell(user, `
-    <section class="course-shell platform-course">
-      <aside class="lesson-menu">
-        ${course.lessons.map((item, index) => `
-          <button class="lesson-tab ${index === lessonIndex ? 'active' : ''}" data-lesson-nav="${index}" ${isLessonUnlocked(user.id, index) ? '' : 'disabled'}>
-            ${completed.includes(index) ? '[Done] ' : isLessonUnlocked(user.id, index) ? '' : '[Locked] '}${index + 1}. ${item.title}
-          </button>
-        `).join('')}
+    <section class="course-player platform-course">
+      <aside class="course-rail">
+        <div class="course-rail-card">
+          ${courseLogo(course)}
+          <h2>${course.title}</h2>
+          <p>${course.id === 'google-search-ads' ? 'Marketing Specialist' : 'SEO Foundations'}</p>
+        </div>
+        <nav class="course-rail-nav" aria-label="Course sections">
+          <button data-route="dashboard"><span>▦</span>Overview</button>
+          <button class="active"><span>▤</span>Lessons</button>
+          <button><span>▱</span>Resources</button>
+          <button><span>▣</span>Assignments</button>
+          <button><span>☰</span>Discussion</button>
+        </nav>
       </aside>
-      <article class="lesson-card">
-        <div class="progress-wrap">
-          <span>${completed.length} of ${course.lessons.length} lessons complete</span>
-          <div class="progress-track"><span style="width:${(completed.length / course.lessons.length) * 100}%"></span></div>
+
+      <main class="course-player-main">
+        <div class="course-player-header">
+          <div>
+            <h1>Lesson ${lessonIndex + 1}: ${lesson.title}</h1>
+            <p>${course.title} • Module ${lessonIndex + 1}</p>
+          </div>
+          <div class="course-player-actions">
+            <button class="button secondary" data-start-test>Start test</button>
+            <button class="button primary" data-next-lesson ${canOpenNext ? '' : 'disabled'}>Next lesson</button>
+          </div>
         </div>
-        <div class="lesson-header">
-          <p class="eyebrow">Lesson ${lessonIndex + 1} • ${lesson.duration}</p>
-          <h1>${lesson.title}</h1>
-          <p><strong>Goal:</strong> ${lesson.goal}</p>
+
+        <article class="lesson-card course-detail-card">
+          <div class="course-detail-tabs" role="tablist" aria-label="Lesson details">
+            <button class="active">Description</button>
+            <button>Resources (${Math.min(3, lesson.glossary.length)})</button>
+            <button>Notes</button>
+            <button>Discussion</button>
+          </div>
+          <div class="course-detail-body">
+            <section class="lesson-intro">
+              <p>${lesson.goal}</p>
+              <h4>Learning Objectives:</h4>
+              ${listItems(lesson.outcomes)}
+            </section>
+            <section class="lesson-resources">
+              <h4>Lesson Resources</h4>
+              <div>
+                <article><strong>Lesson workbook.pdf</strong><span>Download</span></article>
+                <article><strong>Practice checklist.xlsx</strong><span>Download</span></article>
+              </div>
+            </section>
+            ${renderLessonVisual(lessonIndex)}
+            <section class="lesson-section"><h4>What this means</h4>${lesson.sections.what.map((item) => `<p>${item}</p>`).join('')}</section>
+            <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
+            <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
+            <section class="lesson-section"><h4>How to do it</h4>${listItems(lesson.sections.how)}</section>
+            <section class="lesson-section"><h4>Terminology and glossary</h4><div class="lesson-term-grid">${lesson.glossary.map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`).join('')}</div></section>
+            <section class="lesson-section"><h4>Examples</h4><div class="lesson-example-grid">${lesson.examples.map((example) => `<article class="lesson-example"><h5>${example.title}</h5><p><strong>Problem:</strong> ${example.problem}</p><p><strong>Walkthrough:</strong> ${example.walkthrough}</p><p><strong>Takeaway:</strong> ${example.takeaway}</p></article>`).join('')}</div></section>
+            <section class="lesson-section"><h4>Hands-on practice</h4><div class="practice">${listItems(lesson.practice)}</div></section>
+            <section class="lesson-section"><h4>Lesson test</h4><p>You have 5 minutes. Questions and options are randomized. You may get up to 3 answers wrong. If 4 or more are wrong, you must retake the test.</p><button class="button primary" data-start-test>Start 5-minute test</button></section>
+          </div>
+        </article>
+      </main>
+
+      <aside class="course-content-panel">
+        <div class="course-content-head">
+          <h2>Course Content</h2>
+          <span>${coursePercent}% Complete</span>
         </div>
-        <div class="lesson-meta">
-          <div><strong>0-10 min</strong><span>Concepts</span></div>
-          <div><strong>10-25 min</strong><span>Why it matters</span></div>
-          <div><strong>25-40 min</strong><span>How and where</span></div>
-          <div><strong>40-50 min</strong><span>Practice</span></div>
-          <div><strong>50-60 min</strong><span>Timed test</span></div>
+        <div class="course-content-list">
+          ${course.lessons.map((item, index) => {
+            const unlocked = isLessonUnlocked(user.id, index);
+            const done = completed.includes(index);
+            return `
+              <button class="course-content-item ${index === lessonIndex ? 'active' : ''} ${done ? 'completed' : ''}" data-lesson-nav="${index}" ${unlocked ? '' : 'disabled'}>
+                <span class="course-content-index">${done ? '✓' : index + 1}</span>
+                <span><strong>${index + 1}. ${item.title}</strong><small>${index === lessonIndex ? 'Now Playing' : done ? 'Completed' : unlocked ? 'Available' : 'Locked'}</small></span>
+                <em>${item.duration.replace(' minutes', ':00')}</em>
+              </button>
+            `;
+          }).join('')}
         </div>
-        <section class="lesson-section"><h4>Learning outcomes</h4>${listItems(lesson.outcomes)}</section>
-        ${renderLessonVisual(lessonIndex)}
-        <section class="lesson-section"><h4>What this means</h4>${lesson.sections.what.map((item) => `<p>${item}</p>`).join('')}</section>
-        <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
-        <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
-        <section class="lesson-section"><h4>How to do it</h4>${listItems(lesson.sections.how)}</section>
-        <section class="lesson-section"><h4>Terminology and glossary</h4><div class="lesson-term-grid">${lesson.glossary.map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`).join('')}</div></section>
-        <section class="lesson-section"><h4>Examples</h4><div class="lesson-example-grid">${lesson.examples.map((example) => `<article class="lesson-example"><h5>${example.title}</h5><p><strong>Problem:</strong> ${example.problem}</p><p><strong>Walkthrough:</strong> ${example.walkthrough}</p><p><strong>Takeaway:</strong> ${example.takeaway}</p></article>`).join('')}</div></section>
-        <section class="lesson-section"><h4>Hands-on practice</h4><div class="practice">${listItems(lesson.practice)}</div></section>
-        <section class="lesson-section"><h4>Lesson test</h4><p>You have 5 minutes. Questions and options are randomized. You may get up to 3 answers wrong. If 4 or more are wrong, you must retake the test.</p><button class="button primary" data-start-test>Start 5-minute test</button></section>
-      </article>
+      </aside>
     </section>
   `);
   document.querySelectorAll('[data-lesson-nav]').forEach((button) => {
@@ -2908,7 +2955,10 @@ function renderLesson(user) {
       navigate({view: 'course', courseId: course.id, lesson: Number(button.dataset.lessonNav)});
     });
   });
-  document.querySelector('[data-start-test]').addEventListener('click', () => startTest(user, lessonIndex));
+  document.querySelectorAll('[data-start-test]').forEach((button) => button.addEventListener('click', () => startTest(user, lessonIndex)));
+  document.querySelector('[data-next-lesson]')?.addEventListener('click', () => {
+    if (canOpenNext) navigate({view: 'course', courseId: course.id, lesson: nextLessonIndex});
+  });
 }
 
 function startLessonTimer(userId, lessonIndex) {
