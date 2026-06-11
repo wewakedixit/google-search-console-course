@@ -1960,14 +1960,14 @@ function renderShell(user, content) {
     : '';
 
   app.innerHTML = `
-    <header class="platform-header">
+    <header class="platform-header ${user?.role === 'student' && route.view === 'dashboard' ? 'student-dashboard-header' : ''}">
       <a class="platform-brand" href="#" data-route="dashboard">
         <span class="brand-mark">N</span>
         <span>NextSkills</span>
       </a>
       ${nav}
     </header>
-    <main class="platform-main">${content}</main>
+    <main class="platform-main ${user?.role === 'student' && route.view === 'dashboard' ? 'student-dashboard-main' : ''}">${content}</main>
   `;
   bindGlobalActions();
 }
@@ -2039,58 +2039,123 @@ function renderDashboard(user) {
   const totalStudyTime = assignedCourses.reduce((sum, item) => sum + Object.values(userLessonTime(user.id, item.id)).reduce((innerSum, value) => innerSum + value, 0), 0);
   const latestAttempt = state.attempts.filter((attempt) => attempt.userId === user.id).at(-1);
   const now = new Date();
+  const activeCourse = assignedCourses[0];
+  const activeCompleted = activeCourse ? userProgress(user.id, activeCourse.id).completedLessons.length : 0;
+  const activeProgress = activeCourse ? Math.round((activeCompleted / activeCourse.lessons.length) * 100) : 0;
+  const completedCourses = assignedCourses.filter((item) => userProgress(user.id, item.id).completedLessons.length === item.lessons.length).length;
+  const inProgressCourses = assignedCourses.length - completedCourses;
+  const weeklyHours = [0.5, 1.5, 2.5, 1, 4, 3, 2];
   renderShell(user, `
-    <section class="dashboard-hero">
-      <div>
-        <p class="eyebrow">Student dashboard</p>
-        <h1>Welcome, ${escapeHtml(user.name)}</h1>
-        <p>Your assigned courses appear here. Complete each lesson test to unlock the next lesson.</p>
-      </div>
-      <div class="dashboard-stat"><strong>${completed}/${totalLessons}</strong><span>lessons completed</span></div>
-    </section>
-    <section class="insight-grid">
-      <article><strong>${now.toLocaleDateString()}</strong><span>today's date</span></article>
-      <article><strong>${now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</strong><span>current time</span></article>
-      <article><strong>${progressPercent}%</strong><span>course progress</span></article>
-      <article><strong>${secondsToClock(totalStudyTime)}</strong><span>study time</span></article>
-      <article><strong>${latestAttempt ? (latestAttempt.passed ? 'Passed' : 'Retake') : 'No test'}</strong><span>latest attempt</span></article>
-      <article><strong>${latestAttempt ? `${latestAttempt.correct}/10` : '-'}</strong><span>latest score</span></article>
-    </section>
-    <section class="course-list">
-      ${assignedCourses.length
-        ? assignedCourses.map((item) => {
-          const itemCompleted = userProgress(user.id, item.id).completedLessons.length;
-          const itemTime = Object.values(userLessonTime(user.id, item.id)).reduce((sum, value) => sum + value, 0);
-          const itemAttempts = state.attempts.filter((attempt) => attempt.userId === user.id && attempt.courseId === item.id);
-          return `
-          <article class="course-card">
-            <span class="status-pill success">${item.lessons.length} lessons</span>
-            <h2>${item.title}</h2>
-            <p>${item.subtitle}</p>
-            <div class="course-card-stats">
-              <span>${itemCompleted}/${item.lessons.length} complete</span>
-              <span>${secondsToClock(itemTime)} study</span>
-              <span>${itemAttempts.length} attempts</span>
+    <section class="learning-dashboard">
+      <aside class="learner-rail" aria-label="Student navigation">
+        <div class="rail-logo">N.</div>
+        <button title="Dashboard">⌂</button>
+        <button title="Courses">▱</button>
+        <button title="Profile">♡</button>
+        <button title="Messages">✉</button>
+        <button title="Settings">⚙</button>
+        <button class="rail-bottom" data-action="logout" title="Logout">↪</button>
+      </aside>
+
+      <div class="learning-main">
+        <section class="welcome-card">
+          <div>
+            <h1>Hello ${escapeHtml(user.name.split(' ')[0] || user.name)}!</h1>
+            <p>It’s good to see you again. Continue your assigned courses from here.</p>
+          </div>
+          <div class="student-illustration" aria-hidden="true">
+            <span class="head"></span><span class="hair"></span><span class="body"></span><span class="arm"></span><span class="hand">✋</span>
+          </div>
+        </section>
+
+        ${activeCourse ? `
+          <section class="continue-card">
+            <div class="course-icon">${activeCourse.title.includes('Ads') ? 'Ads' : 'GSC'}</div>
+            <div>
+              <h2>${activeCourse.title}</h2>
+              <p>${activeCourse.lessons.length} lessons • ${secondsToClock(Object.values(userLessonTime(user.id, activeCourse.id)).reduce((sum, value) => sum + value, 0))} studied</p>
             </div>
-            <div class="progress-track"><span style="width:${(itemCompleted / item.lessons.length) * 100}%"></span></div>
-            <button class="button primary" data-open-course="${item.id}">Open course</button>
-          </article>
-        `;}).join('')
-        : '<article class="empty-card">No course assigned yet. Please contact your admin.</article>'}
-    </section>
-    <section class="stress-card">
-      <div>
-        <p class="eyebrow">Stress relief</p>
-        <h2>X/O quick break</h2>
-        <p>Play a short round against the computer between study sessions.</p>
+            <div class="mini-progress" style="--progress:${activeProgress}%"><span>${activeProgress}%</span></div>
+            <button class="button primary" data-open-course="${activeCourse.id}">Continue</button>
+          </section>
+        ` : ''}
+
+        <section class="dashboard-course-section">
+          <div class="section-row">
+            <h2>Courses</h2>
+            <div class="course-tabs"><span>All Courses</span><span>Assigned</span><span>In Progress</span></div>
+          </div>
+          <div class="course-list learning-course-list">
+            ${assignedCourses.length
+              ? assignedCourses.map((item) => {
+                const itemCompleted = userProgress(user.id, item.id).completedLessons.length;
+                const itemTime = Object.values(userLessonTime(user.id, item.id)).reduce((sum, value) => sum + value, 0);
+                const itemAttempts = state.attempts.filter((attempt) => attempt.userId === user.id && attempt.courseId === item.id);
+                return `
+                  <article class="course-card learning-course-card">
+                    <div class="course-icon">${item.title.includes('Ads') ? 'Ads' : 'GSC'}</div>
+                    <div>
+                      <h3>${item.title}</h3>
+                      <p>${item.subtitle}</p>
+                      <small>${itemCompleted}/${item.lessons.length} complete • ${secondsToClock(itemTime)} study • ${itemAttempts.length} attempts</small>
+                    </div>
+                    <span class="course-rating">★ ${Math.max(4.6, 5 - (itemAttempts.length * 0.1)).toFixed(1)}</span>
+                    <button class="button primary" data-open-course="${item.id}">View course</button>
+                  </article>
+                `;
+              }).join('')
+              : '<article class="empty-card">No course assigned yet. Please contact your admin.</article>'}
+          </div>
+        </section>
       </div>
-      <div class="xo-game">
-        <div class="xo-board">
-          ${Array.from({length: 9}).map((_, index) => `<button type="button" data-xo-cell="${index}" aria-label="Cell ${index + 1}"></button>`).join('')}
+
+      <aside class="learning-side">
+        <div class="top-tools">
+          <div class="search-pill">⌕</div>
+          <div class="notification">♧<span>1</span></div>
+          <div class="avatar">${escapeHtml((user.name[0] || 'S').toUpperCase())}</div>
         </div>
-        <p id="xo-status">Your turn. You are X.</p>
-        <button class="button secondary" data-reset-xo>Reset game</button>
-      </div>
+
+        <div class="summary-cards">
+          <article><strong>${completedCourses}</strong><span>Courses<br/>completed</span></article>
+          <article><strong>${inProgressCourses}</strong><span>Courses<br/>in progress</span></article>
+        </div>
+
+        <section class="stats-panel">
+          <div class="section-row">
+            <h2>Your statistics</h2>
+            <span class="week-pill">Weekly⌄</span>
+          </div>
+          <div class="stats-tabs"><span>Learning Hours</span><span>My Courses</span></div>
+          <div class="learning-chart">
+            ${weeklyHours.map((hour, index) => `
+              <div class="chart-point" style="--x:${index};--h:${hour};"><span>${String(hour).replace('.5', ',5')}h</span></div>
+            `).join('')}
+            <div class="chart-days"><span>mon</span><span>tue</span><span>wed</span><span>thu</span><span>fri</span><span>sat</span><span>sun</span></div>
+          </div>
+        </section>
+
+        <section class="mini-analytics">
+          <article><strong>${now.toLocaleDateString()}</strong><span>Date</span></article>
+          <article><strong>${now.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</strong><span>Time</span></article>
+          <article><strong>${progressPercent}%</strong><span>Progress</span></article>
+          <article><strong>${latestAttempt ? `${latestAttempt.correct}/10` : '-'}</strong><span>Latest score</span></article>
+        </section>
+
+        <section class="stress-card dashboard-stress-card">
+          <div>
+            <h2>Stress relief</h2>
+            <p>Play X/O with the computer.</p>
+          </div>
+          <div class="xo-game">
+            <div class="xo-board">
+              ${Array.from({length: 9}).map((_, index) => `<button type="button" data-xo-cell="${index}" aria-label="Cell ${index + 1}"></button>`).join('')}
+            </div>
+            <p id="xo-status">Your turn. You are X.</p>
+            <button class="button secondary" data-reset-xo>Reset</button>
+          </div>
+        </section>
+      </aside>
     </section>
   `);
   document.querySelectorAll('[data-open-course]').forEach((button) => button.addEventListener('click', () => {
