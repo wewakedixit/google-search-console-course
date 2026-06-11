@@ -1789,6 +1789,7 @@ const seedState = {
   progress: {},
   attempts: [],
   lessonTime: {},
+  notificationReads: {},
   currentSession: null
 };
 
@@ -1805,7 +1806,8 @@ function loadState() {
     assignments: saved.assignments || seedState.assignments,
     progress: saved.progress || {},
     attempts: saved.attempts || [],
-    lessonTime: saved.lessonTime || {}
+    lessonTime: saved.lessonTime || {},
+    notificationReads: saved.notificationReads || {}
   };
 }
 
@@ -1948,12 +1950,14 @@ function dashboardStudySeries(userId, assignedCourses, period) {
 
 function dashboardNotifications(user, assignedCourses) {
   const assigned = assignedCourses.map((item) => ({
+    id: `assigned-${item.id}`,
     type: 'Course assigned',
     text: `${item.title} is available on your dashboard.`
   }));
   const completed = assignedCourses
     .filter((item) => isCourseCompleted(user.id, item))
     .map((item) => ({
+      id: `completed-${item.id}`,
       type: 'Course completed',
       text: `Your ${item.title} certificate is ready.`
     }));
@@ -1962,10 +1966,21 @@ function dashboardNotifications(user, assignedCourses) {
     .slice(-3)
     .reverse()
     .map((attempt) => ({
+      id: `retake-${attempt.id}`,
       type: 'Retake test',
       text: `${getCourse(attempt.courseId).title}, lesson ${attempt.lessonIndex + 1} needs another attempt.`
     }));
   return [...retakes, ...completed, ...assigned].slice(0, 6);
+}
+
+function unreadNotifications(userId, notifications) {
+  const read = state.notificationReads[userId] || [];
+  return notifications.filter((item) => !read.includes(item.id));
+}
+
+function markNotificationsRead(userId, notifications) {
+  state.notificationReads[userId] = Array.from(new Set([...(state.notificationReads[userId] || []), ...notifications.map((item) => item.id)]));
+  saveState();
 }
 
 function escapePdfText(value) {
@@ -2190,20 +2205,17 @@ function renderDashboard(user) {
   const inProgressCourses = assignedCourses.filter((item) => isCourseInProgress(user.id, item)).length;
   const courseRows = dashboardCourseRows(user, assigned);
   const notifications = dashboardNotifications(user, assignedCourses);
+  const unreadCount = unreadNotifications(user.id, notifications).length;
   const stats = dashboardStudySeries(user.id, assignedCourses, dashboardStatsPeriod);
   const maxChartIndex = Math.max(stats.values.length - 1, 1);
+  const chartPoints = stats.values.map((_, index) => {
+    const x = 8 + ((index / maxChartIndex) * 84);
+    const y = 88 - stats.heights[index];
+    return {x: Number(x.toFixed(2)), y: Number(y.toFixed(2))};
+  });
+  const chartPolyline = chartPoints.map((point) => `${point.x},${point.y}`).join(' ');
   renderShell(user, `
     <section class="learning-dashboard">
-      <aside class="learner-rail" aria-label="Student navigation">
-        <div class="rail-logo">N.</div>
-        <button title="Dashboard">⌂</button>
-        <button title="Courses">▱</button>
-        <button title="Profile">♡</button>
-        <button title="Messages">✉</button>
-        <button title="Settings">⚙</button>
-        <button class="rail-bottom" data-action="logout" title="Logout">↪</button>
-      </aside>
-
       <div class="learning-main">
         <section class="welcome-card">
           <div>
@@ -2275,7 +2287,13 @@ function renderDashboard(user) {
       <aside class="learning-side">
         <div class="top-tools">
           <div class="notification-wrap">
-            <button class="notification" data-toggle-notifications aria-label="Notifications">&#128276;<span>${notifications.length}</span></button>
+            <button class="notification" data-toggle-notifications aria-label="Notifications">
+              <svg class="bell-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+                <path d="M10 21h4"></path>
+              </svg>
+              ${unreadCount ? `<span class="notification-count">${unreadCount}</span>` : ''}
+            </button>
             <div class="notification-panel" hidden>
               <h3>Notifications</h3>
               ${notifications.length ? notifications.map((item) => `
@@ -2286,7 +2304,15 @@ function renderDashboard(user) {
               `).join('') : '<p>No notifications yet.</p>'}
             </div>
           </div>
-          <div class="avatar">${escapeHtml((user.name[0] || 'S').toUpperCase())}</div>
+          <div class="account-wrap">
+            <button class="avatar" data-toggle-account aria-label="Account menu">${escapeHtml((user.name[0] || 'S').toUpperCase())}</button>
+            <div class="account-panel" hidden>
+              <strong>${escapeHtml(user.name)}</strong>
+              <span>${escapeHtml(user.email)}</span>
+              <button data-route="profile">My profile</button>
+              <button data-action="logout">Logout</button>
+            </div>
+          </div>
         </div>
 
         <div class="summary-cards">
@@ -2306,8 +2332,11 @@ function renderDashboard(user) {
           </div>
           <div class="stats-tabs"><span>Learning Hours</span><span>My Courses</span></div>
           <div class="learning-chart" style="--chart-count:${stats.values.length}">
+            <svg class="chart-line" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <polyline points="${chartPolyline}"></polyline>
+            </svg>
             ${stats.values.map((hour, index) => `
-              <div class="chart-point" style="--x:${(index / maxChartIndex) * 96};--h:${stats.heights[index]};"><span>${String(hour).replace('.5', ',5')}h</span></div>
+              <div class="chart-point" style="--x:${chartPoints[index].x};--h:${100 - chartPoints[index].y};"><span>${String(hour).replace('.5', ',5')}h</span></div>
             `).join('')}
             <div class="chart-days">${stats.labels.map((label) => `<span>${label}</span>`).join('')}</div>
           </div>
@@ -2333,6 +2362,16 @@ function renderDashboard(user) {
   document.querySelector('[data-toggle-notifications]')?.addEventListener('click', () => {
     const panel = document.querySelector('.notification-panel');
     if (panel) panel.hidden = !panel.hidden;
+    const accountPanel = document.querySelector('.account-panel');
+    if (accountPanel) accountPanel.hidden = true;
+    markNotificationsRead(user.id, notifications);
+    document.querySelector('[data-toggle-notifications] span')?.remove();
+  });
+  document.querySelector('[data-toggle-account]')?.addEventListener('click', () => {
+    const panel = document.querySelector('.account-panel');
+    if (panel) panel.hidden = !panel.hidden;
+    const notificationPanel = document.querySelector('.notification-panel');
+    if (notificationPanel) notificationPanel.hidden = true;
   });
   document.querySelectorAll('[data-open-course]').forEach((button) => button.addEventListener('click', () => {
     route = {view: 'course', courseId: button.dataset.openCourse, lesson: 0};
@@ -2580,6 +2619,26 @@ function renderProfile(user) {
       <h1>${escapeHtml(user.name)}</h1>
       <p>${escapeHtml(user.email)} • ${user.role}</p>
       ${user.role === 'student' ? `<div class="dashboard-stat"><strong>${completed}/${totalLessons}</strong><span>lessons completed</span></div>` : ''}
+      <div class="profile-grid">
+        <form id="profile-details-form" class="stack-form profile-card">
+          <h2>Profile details</h2>
+          <label>Phone number<input name="phone" value="${escapeHtml(user.phone || '')}" /></label>
+          <label>College or university<input name="college" value="${escapeHtml(user.college || '')}" /></label>
+          <label>LinkedIn<input name="linkedin" type="url" value="${escapeHtml(user.linkedin || '')}" placeholder="https://linkedin.com/in/..." /></label>
+          <label>Instagram<input name="instagram" type="url" value="${escapeHtml(user.instagram || '')}" placeholder="https://instagram.com/..." /></label>
+          <label>Website<input name="website" type="url" value="${escapeHtml(user.website || '')}" placeholder="https://example.com" /></label>
+          <button class="button primary" type="submit">Save profile</button>
+          <p id="profile-message" class="form-error"></p>
+        </form>
+        <form id="password-form" class="stack-form profile-card">
+          <h2>Change password</h2>
+          <label>Existing password<input name="existingPassword" type="password" required /></label>
+          <label>New password<input name="newPassword" type="password" minlength="6" maxlength="10" required /></label>
+          <label>Confirm new password<input name="confirmPassword" type="password" minlength="6" maxlength="10" required /></label>
+          <button class="button primary" type="submit">Update password</button>
+          <p id="password-message" class="form-error"></p>
+        </form>
+      </div>
       <h2>Recent test activity</h2>
       ${attempts.slice(-6).reverse().map((attempt) => `
         <div class="attempt-row">
@@ -2589,6 +2648,47 @@ function renderProfile(user) {
       `).join('') || '<p>No student test activity yet.</p>'}
     </section>
   `);
+  document.querySelector('#profile-details-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    Object.assign(user, {
+      phone: String(form.get('phone')).trim(),
+      college: String(form.get('college')).trim(),
+      linkedin: String(form.get('linkedin')).trim(),
+      instagram: String(form.get('instagram')).trim(),
+      website: String(form.get('website')).trim()
+    });
+    saveState();
+    const message = document.querySelector('#profile-message');
+    if (message) {
+      message.classList.add('success-message');
+      message.textContent = 'Profile saved.';
+    }
+  });
+  document.querySelector('#password-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const existingPassword = String(form.get('existingPassword'));
+    const newPassword = String(form.get('newPassword'));
+    const confirmPassword = String(form.get('confirmPassword'));
+    const message = document.querySelector('#password-message');
+    const fail = (text) => {
+      if (!message) return;
+      message.classList.remove('success-message');
+      message.textContent = text;
+    };
+    if (existingPassword !== user.password) return fail('Existing password is not correct.');
+    if (newPassword.length < 6 || newPassword.length > 10) return fail('New password must be 6 to 10 characters.');
+    if (!/[A-Za-z]/.test(newPassword) || !/[0-9]/.test(newPassword)) return fail('New password must include alphabets and numbers.');
+    if (newPassword !== confirmPassword) return fail('New passwords do not match.');
+    user.password = newPassword;
+    saveState();
+    event.currentTarget.reset();
+    if (message) {
+      message.classList.add('success-message');
+      message.textContent = 'Password updated.';
+    }
+  });
 }
 
 function renderLessonVisual(index) {
