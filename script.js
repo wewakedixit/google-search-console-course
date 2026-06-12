@@ -1114,7 +1114,7 @@ const googleSearchAdsLessons = [
     duration: '60 minutes',
     goal: 'Understand what Google Search Ads are, when to use them, and how they differ from SEO.',
     outcomes: [
-      'Explain paid search in simple English.',
+      'Explain paid search clearly.',
       'Understand where search ads appear.',
       'Know the difference between SEO clicks and ad clicks.',
       'Identify the business goal before creating a campaign.'
@@ -3107,11 +3107,12 @@ function renderTest(user) {
   renderShell(user, `
     <section class="test-screen" oncopy="return false" oncut="return false" onpaste="return false" oncontextmenu="return false">
       <div class="test-top">
-        <div><p class="eyebrow">Timed test</p><h1>${course.lessons[activeTest.lessonIndex].title}</h1></div>
-        <div class="timer" id="test-timer">${secondsToClock(activeTest.remaining)}</div>
+        <div><p class="test-pill">Timed test</p><h1>${course.lessons[activeTest.lessonIndex].title}</h1></div>
+        <div class="timer"><span>Time left</span><strong id="test-timer">${secondsToClock(activeTest.remaining)}</strong></div>
       </div>
-      <div class="security-note">
-        Test security: copy and right-click are blocked where the browser allows it. Switching tabs/windows gives one warning. A second switch closes the test and requires a retake. A normal website cannot reliably detect a photo taken from another mobile phone, but the test screen is blacked out when focus changes.
+      <div class="security-note test-security-card">
+        <span class="security-icon">◇</span>
+        <p><strong>Test security:</strong> copy and right-click are blocked where possible. Switching tabs/windows gives one warning. A second switch closes the test and requires a retake. Focus tracking is active.</p>
       </div>
       <div id="focus-warning" class="focus-warning" hidden></div>
       <form id="test-form" class="test-form">
@@ -3229,11 +3230,18 @@ function submitTest(user, forced) {
   }
   saveState();
   document.querySelector('#test-form')?.remove();
+  document.querySelector('.test-screen')?.classList.add('test-result-screen');
+  document.querySelector('.security-note')?.classList.add('result-security-panel');
+  document.querySelector('.security-note')?.classList.remove('test-security-card');
   document.querySelector('#test-result').innerHTML = `
     <div class="result-card">
-      <h2>Test submitted</h2>
-      <p>Click the button below to view your result summary. Correct answers are not shown.</p>
-      <button class="button primary" data-view-result>View results</button>
+      <div class="result-submit-row">
+        <div>
+          <h2>Test submitted</h2>
+          <p>Click the button below to view your result summary. Correct answers are not shown.</p>
+        </div>
+        <button class="button secondary" data-view-result>View results</button>
+      </div>
       <div id="result-summary"></div>
     </div>
   `;
@@ -3244,7 +3252,7 @@ function submitTest(user, forced) {
         <div class="score-ring" style="--score:${scorePercent}%"><strong>${correct}/10</strong><span>${scorePercent}%</span></div>
         <div>
           <h3>${passed ? 'Passed' : 'Retake required'}</h3>
-          <p>${passed ? 'Good work. You can continue to the next lesson.' : 'More than 3 answers were wrong, or the attempt was closed. Please retake the test.'}</p>
+          <p>${passed ? 'Good work. You can continue to the next lesson.' : 'More than 3 answers were wrong, or the attempt was automatically closed due to focus violations. Please retake the test after reviewing the material.'}</p>
         </div>
       </div>
       <div class="result-metrics">
@@ -3253,7 +3261,7 @@ function submitTest(user, forced) {
         <article><strong>${attempt.violations}</strong><span>focus warnings</span></article>
         <article><strong>${forced ? 'Closed' : 'Submitted'}</strong><span>attempt type</span></article>
       </div>
-      <p class="security-note">Correct answers are intentionally hidden. Review the lesson and retake if needed.</p>
+      <p class="result-note">ⓘ Correct answers are intentionally hidden. Review the lesson and retake if needed.</p>
       <button class="button primary" data-return-course>${passed ? 'Continue course' : 'Retake lesson test'}</button>
     `;
     document.querySelector('[data-return-course]').addEventListener('click', () => {
