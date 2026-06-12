@@ -1830,6 +1830,7 @@ const seedState = {
       email: 'student@nextskills.local',
       password: 'student123',
       role: 'student',
+      accountStatus: 'active',
       createdAt: new Date().toISOString()
     }
   ],
@@ -1845,12 +1846,23 @@ const seedState = {
   currentSession: null
 };
 
+function normalizeUsers(users) {
+  return (users || seedState.users).map((user) => {
+    if (user.role !== 'student') return user;
+    return {...user, accountStatus: user.accountStatus || 'active'};
+  });
+}
+
+function studentAccountStatus(student) {
+  return student.accountStatus === 'inactive' ? 'inactive' : 'active';
+}
+
 function mergeState(saved) {
   saved = saved || {};
   return {
     ...structuredClone(seedState),
     ...(saved || {}),
-    users: saved.users || seedState.users,
+    users: normalizeUsers(saved.users || seedState.users),
     assignments: saved.assignments || seedState.assignments,
     progress: saved.progress || {},
     attempts: saved.attempts || [],
@@ -2310,6 +2322,10 @@ function renderLogin() {
       document.querySelector('#login-error').textContent = 'Invalid email or password.';
       return;
     }
+    if (user.role === 'student' && studentAccountStatus(user) === 'inactive') {
+      document.querySelector('#login-error').textContent = 'Your account is inactive. Please contact your admin.';
+      return;
+    }
     setSession(user);
     navigate({view: user.role === 'admin' ? 'admin' : 'dashboard'}, {replace: true});
   });
@@ -2593,13 +2609,13 @@ function renderAdmin(user) {
   const pendingRequests = (state.unlockRequests || []).filter((request) => request.status === 'pending');
   const selectedStudent = students.find((student) => student.id === activeStudentId) || students[0] || null;
   if (selectedStudent) activeStudentId = selectedStudent.id;
-  const activeStudents = students.filter((student) => courses.some((item) => userProgress(student.id, item.id).completedLessons.length > 0)).length;
+  const activeStudents = students.filter((student) => studentAccountStatus(student) === 'active').length;
   const rows = students.filter((student) => {
     const assignedTitles = courses.filter((item) => (state.assignments[student.id] || []).includes(item.id)).map((item) => item.title).join(' ');
     const haystack = `${student.name} ${student.email} ${assignedTitles}`.toLowerCase();
     const matchesSearch = haystack.includes(adminStudentSearch.toLowerCase());
     const hasPending = pendingRequests.some((request) => request.userId === student.id);
-    const isActive = courses.some((item) => userProgress(student.id, item.id).completedLessons.length > 0);
+    const isActive = studentAccountStatus(student) === 'active';
     const matchesFilter = adminStatusFilter === 'all' || (adminStatusFilter === 'active' && isActive) || (adminStatusFilter === 'inactive' && !isActive) || (adminStatusFilter === 'pending' && hasPending);
     return matchesSearch && matchesFilter;
   });
@@ -2664,18 +2680,12 @@ function renderAdmin(user) {
           <div class="admin-student-table">
             <div class="admin-table-head"><span>Name</span><span>Email</span><span>Status</span><span>Action</span></div>
             ${rows.map((student) => {
-              const assigned = courses.filter((item) => (state.assignments[student.id] || []).includes(item.id));
-              const completed = assigned.reduce((sum, item) => sum + userProgress(student.id, item.id).completedLessons.length, 0);
-              const totalLessons = assigned.reduce((sum, item) => sum + item.lessons.length, 0) || 0;
-              const progress = totalLessons ? Math.round((completed / totalLessons) * 100) : 0;
-              const latest = state.attempts.filter((attempt) => attempt.userId === student.id).at(-1);
-              const hasPending = pendingRequests.some((request) => request.userId === student.id);
-              const isActive = progress > 0;
+              const status = studentAccountStatus(student);
               return `
                 <article class="admin-table-row ${selectedStudent?.id === student.id ? 'selected' : ''}">
                   <strong>${escapeHtml(student.name)}</strong>
                   <span>${escapeHtml(student.email)}</span>
-                  <span><mark class="${hasPending ? 'pending' : isActive ? 'active' : ''}">${hasPending ? 'Pending' : isActive ? 'Active' : 'Inactive'}</mark></span>
+                  <span><mark class="${status === 'active' ? 'active' : ''}">${status === 'active' ? 'Active' : 'Inactive'}</mark></span>
                   <button class="button secondary" data-view-student="${student.id}">View Profile</button>
                 </article>
               `;
@@ -2725,7 +2735,7 @@ function renderAdmin(user) {
       alert('A user with this email already exists.');
       return;
     }
-    const newUser = {id: `student-${Date.now()}`, name: String(form.get('name')).trim(), email, password: String(form.get('password')), role: 'student', createdAt: new Date().toISOString()};
+    const newUser = {id: `student-${Date.now()}`, name: String(form.get('name')).trim(), email, password: String(form.get('password')), role: 'student', accountStatus: 'active', createdAt: new Date().toISOString()};
     state.users.push(newUser);
     state.assignments[newUser.id] = [];
     activeStudentId = newUser.id;
@@ -2768,7 +2778,7 @@ function renderStudentReport(adminUser) {
   const passedTests = attempts.filter((attempt) => attempt.passed).length;
   const failedTests = attempts.filter((attempt) => !attempt.passed).length;
   const averageScore = attempts.length ? Math.round((attempts.reduce((sum, attempt) => sum + attempt.correct, 0) / (attempts.length * 10)) * 100) : 0;
-  const status = (state.unlockRequests || []).some((request) => request.userId === student.id && request.status === 'pending') ? 'Pending Request' : progress > 0 ? 'Active' : 'Inactive';
+  const status = studentAccountStatus(student);
   const bioItems = [
     ['Phone', student.phone || 'Not added'],
     ['College / University', student.college || 'Not added'],
@@ -2797,7 +2807,12 @@ function renderStudentReport(adminUser) {
             <span>${student.bio || 'Student bio and submitted profile details are shown below.'}</span>
           </div>
         </div>
-        <mark class="student-detail-status ${status === 'Active' ? 'active' : status === 'Pending Request' ? 'pending' : ''}">${status}</mark>
+        <div class="student-status-actions">
+          <mark class="student-detail-status ${status === 'active' ? 'active' : ''}">${status === 'active' ? 'Active' : 'Inactive'}</mark>
+          <button class="button ${status === 'active' ? 'danger' : 'primary'}" data-toggle-student-status="${student.id}">
+            Make ${status === 'active' ? 'Inactive' : 'Active'}
+          </button>
+        </div>
       </section>
 
       <section class="admin-stat-grid">
@@ -2868,6 +2883,11 @@ function renderStudentReport(adminUser) {
     const select = document.querySelector('#student-course-multiselect');
     if (!select) return;
     state.assignments[student.id] = Array.from(select.selectedOptions).map((option) => option.value);
+    saveState();
+    renderStudentReport(adminUser);
+  });
+  document.querySelector('[data-toggle-student-status]')?.addEventListener('click', () => {
+    student.accountStatus = studentAccountStatus(student) === 'active' ? 'inactive' : 'active';
     saveState();
     renderStudentReport(adminUser);
   });
