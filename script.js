@@ -1766,6 +1766,7 @@ let dashboardStatsPeriod = 'weekly';
 let courseDetailTab = 'description';
 let adminStudentSearch = '';
 let adminStatusFilter = 'all';
+let authMode = 'student';
 
 function routeFromPath() {
   const segments = window.location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
@@ -1842,6 +1843,7 @@ const seedState = {
   lessonTime: {},
   lessonNotes: {},
   unlockRequests: [],
+  signupRequests: [],
   notificationReads: {},
   currentSession: null
 };
@@ -1869,6 +1871,7 @@ function mergeState(saved) {
     lessonTime: saved.lessonTime || {},
     lessonNotes: saved.lessonNotes || {},
     unlockRequests: saved.unlockRequests || [],
+    signupRequests: saved.signupRequests || [],
     notificationReads: saved.notificationReads || {}
   };
 }
@@ -1938,7 +1941,12 @@ async function bootstrapApp() {
 
 function getSessionUser() {
   const userId = localStorage.getItem(sessionKey);
-  return state.users.find((user) => user.id === userId) || null;
+  const user = state.users.find((item) => item.id === userId) || null;
+  if (user?.role === 'student' && studentAccountStatus(user) === 'inactive') {
+    clearSession();
+    return null;
+  }
+  return user;
 }
 
 function setSession(user) {
@@ -2291,43 +2299,117 @@ function bindGlobalActions() {
 
 function renderLogin() {
   stopLessonTimer();
+  const pendingSignupCount = (state.signupRequests || []).filter((request) => request.status === 'pending').length;
   renderShell(null, `
-    <section class="login-page">
-      <div class="login-copy">
-        <p class="eyebrow">NextSkills learning platform</p>
-        <h1>Skill courses with controlled access.</h1>
-        <p>Admins add students and assign courses. Students log in, study assigned lessons, complete timed tests, and build progress records.</p>
-        <div class="demo-credentials">
+    <section class="auth-page">
+      <div class="auth-visual">
+        <a class="auth-logo" href="#" data-auth-mode="student"><img src="/nextskills-logo.png" alt="NextSkills" /></a>
+        <div>
+          <p class="eyebrow">Skill access platform</p>
+          <h1>Learn smarter with guided digital courses.</h1>
+          <p>Students study assigned lessons, complete timed tests, and track progress. Admins approve access, manage accounts, and review learning activity.</p>
+        </div>
+        <div class="auth-stats">
+          <article><strong>${courses.length}</strong><span>Active courses</span></article>
+          <article><strong>${pendingSignupCount}</strong><span>Signup requests</span></article>
+        </div>
+      </div>
+
+      <section class="auth-card">
+        <div class="auth-tabs" role="tablist" aria-label="Login type">
+          <button class="${authMode === 'student' ? 'active' : ''}" data-auth-mode="student">Student</button>
+          <button class="${authMode === 'admin' ? 'active' : ''}" data-auth-mode="admin">Admin</button>
+        </div>
+        ${authMode === 'signup' ? `
+          <form class="auth-form" id="signup-form">
+            <div>
+              <p class="eyebrow">Request access</p>
+              <h2>Create student signup request</h2>
+              <p>Your request will be sent to the admin for approval.</p>
+            </div>
+            <label>Full name<input name="name" required autocomplete="name" /></label>
+            <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+            <label>Phone / WhatsApp<input name="phone" required autocomplete="tel" /></label>
+            <label>Password<input name="password" type="password" required minlength="6" maxlength="10" /></label>
+            <button class="button primary" type="submit">Send signup request</button>
+            <p id="signup-message" class="form-error"></p>
+            <p class="auth-switch">Already have access? <button type="button" data-auth-mode="student">Login</button></p>
+          </form>
+        ` : `
+          <form class="auth-form" id="login-form">
+            <div>
+              <p class="eyebrow">${authMode === 'admin' ? 'Admin access' : 'Student access'}</p>
+              <h2>${authMode === 'admin' ? 'Login as admin' : 'Login to your classroom'}</h2>
+              <p>${authMode === 'admin' ? 'Manage students, requests, progress, and reports.' : 'Continue your assigned NextSkills courses.'}</p>
+            </div>
+            <label>Email<input name="email" type="email" required autocomplete="email" /></label>
+            <label>Password<input name="password" type="password" required autocomplete="current-password" /></label>
+            <button class="button primary" type="submit">${authMode === 'admin' ? 'Login as admin' : 'Login as student'}</button>
+            <p id="login-error" class="form-error"></p>
+            ${authMode === 'student' ? `<p class="auth-switch">New student? <button type="button" data-auth-mode="signup">Signup request</button></p>` : ''}
+          </form>
+        `}
+        <div class="demo-credentials compact">
           <strong>Demo logins</strong>
           <span>Admin: admin@nextskills.local / admin123</span>
           <span>Student: student@nextskills.local / student123</span>
         </div>
-      </div>
-      <form class="login-card" id="login-form">
-        <h2>Login</h2>
-        <label>Email<input name="email" type="email" required /></label>
-        <label>Password<input name="password" type="password" required /></label>
-        <button class="button primary" type="submit">Login</button>
-        <p id="login-error" class="form-error"></p>
-      </form>
+      </section>
     </section>
   `);
-  document.querySelector('#login-form').addEventListener('submit', (event) => {
+  document.querySelectorAll('[data-auth-mode]').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      authMode = button.dataset.authMode || 'student';
+      renderLogin();
+    });
+  });
+  document.querySelector('#login-form')?.addEventListener('submit', (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const email = String(form.get('email')).trim().toLowerCase();
     const password = String(form.get('password'));
-    const user = state.users.find((item) => item.email.toLowerCase() === email && item.password === password);
+    const user = state.users.find((item) => item.email.toLowerCase() === email && item.password === password && item.role === authMode);
     if (!user) {
       document.querySelector('#login-error').textContent = 'Invalid email or password.';
       return;
     }
     if (user.role === 'student' && studentAccountStatus(user) === 'inactive') {
-      document.querySelector('#login-error').textContent = 'Your account is inactive. Please contact your admin.';
+      document.querySelector('#login-error').textContent = 'Please contact admin to restore your account access.';
       return;
     }
     setSession(user);
     navigate({view: user.role === 'admin' ? 'admin' : 'dashboard'}, {replace: true});
+  });
+  document.querySelector('#signup-form')?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const email = String(form.get('email')).trim().toLowerCase();
+    const phone = String(form.get('phone')).trim();
+    const password = String(form.get('password'));
+    const message = document.querySelector('#signup-message');
+    if (state.users.some((item) => item.email.toLowerCase() === email)) {
+      message.textContent = 'This email already has an account. Please login or contact admin.';
+      return;
+    }
+    const existing = (state.signupRequests || []).find((request) => request.email.toLowerCase() === email && request.status === 'pending');
+    if (existing) {
+      message.textContent = 'Your signup request is already pending with admin.';
+      return;
+    }
+    state.signupRequests = state.signupRequests || [];
+    state.signupRequests.push({
+      id: `signup-${Date.now()}`,
+      name: String(form.get('name')).trim(),
+      email,
+      phone,
+      password,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    });
+    saveState();
+    message.classList.add('success-message');
+    message.textContent = 'Signup request sent. Admin will approve your access.';
   });
 }
 
@@ -2605,8 +2687,17 @@ function bindXoGame() {
 }
 
 function renderAdmin(user) {
+  if (adminStatusFilter === 'pending') adminStatusFilter = 'all';
   const students = state.users.filter((item) => item.role === 'student');
   const pendingRequests = (state.unlockRequests || []).filter((request) => request.status === 'pending');
+  const pendingSignups = (state.signupRequests || []).filter((request) => request.status === 'pending');
+  const adminNotifications = [
+    ...pendingRequests.map((request) => {
+      const requestStudent = state.users.find((item) => item.id === request.userId);
+      return {type: 'Course request', text: `${requestStudent?.name || 'A student'} requested ${getCourse(request.courseId).title}.`};
+    }),
+    ...pendingSignups.map((request) => ({type: 'Signup request', text: `${request.name} requested a student account.`}))
+  ];
   const selectedStudent = students.find((student) => student.id === activeStudentId) || students[0] || null;
   if (selectedStudent) activeStudentId = selectedStudent.id;
   const activeStudents = students.filter((student) => studentAccountStatus(student) === 'active').length;
@@ -2635,9 +2726,23 @@ function renderAdmin(user) {
               <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
               <path d="M10 21h4"></path>
             </svg>
-            ${pendingRequests.length ? `<strong>${pendingRequests.length}</strong>` : ''}
+            ${adminNotifications.length ? `<strong>${adminNotifications.length}</strong>` : ''}
           </button>
-          <button class="avatar" aria-label="Admin profile">AD</button>
+          <div class="notification-panel admin-notification-panel" hidden>
+            <h3>Notifications</h3>
+            ${adminNotifications.length ? adminNotifications.map((item) => `
+              <article><strong>${item.type}</strong><p>${escapeHtml(item.text)}</p></article>
+            `).join('') : '<p>No admin notifications yet.</p>'}
+          </div>
+          <div class="account-wrap">
+            <button class="avatar" data-toggle-admin-account aria-label="Admin profile">AD</button>
+            <div class="account-panel" hidden>
+              <strong>${escapeHtml(user.name)}</strong>
+              <span>${escapeHtml(user.email)}</span>
+              <button data-route="profile">My profile</button>
+              <button data-action="logout">Logout</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2668,7 +2773,6 @@ function renderAdmin(user) {
               <option value="all" ${adminStatusFilter === 'all' ? 'selected' : ''}>All</option>
               <option value="active" ${adminStatusFilter === 'active' ? 'selected' : ''}>Active</option>
               <option value="inactive" ${adminStatusFilter === 'inactive' ? 'selected' : ''}>Inactive</option>
-              <option value="pending" ${adminStatusFilter === 'pending' ? 'selected' : ''}>Pending Requests</option>
             </select>
           </div>
           <form id="add-user-form" class="admin-add-form" hidden>
@@ -2691,6 +2795,20 @@ function renderAdmin(user) {
               `;
             }).join('') || '<article class="admin-empty">No students match this filter.</article>'}
           </div>
+        </div>
+      </section>
+
+      <section id="admin-signups" class="admin-card">
+        <div class="admin-section-head"><div><h2>Signup Requests</h2><p>Approve or reject students who requested platform access.</p></div></div>
+        <div class="admin-request-list signup-request-list">
+          ${pendingSignups.length ? pendingSignups.map((request) => `
+            <article>
+              <strong>${escapeHtml(request.name)}</strong>
+              <span>${escapeHtml(request.email)} • ${escapeHtml(request.phone || 'No phone')}</span>
+              <button class="button primary" data-approve-signup="${request.id}" aria-label="Approve signup">Approve</button>
+              <button class="button secondary" data-reject-signup="${request.id}" aria-label="Reject signup">Reject</button>
+            </article>
+          `).join('') : '<article class="admin-empty">No pending signup requests.</article>'}
         </div>
       </section>
 
@@ -2727,6 +2845,19 @@ function renderAdmin(user) {
     adminStatusFilter = event.currentTarget.value;
     renderAdmin(user);
   });
+  document.querySelector('.admin-bell')?.addEventListener('click', () => {
+    const panel = document.querySelector('.admin-notification-panel');
+    if (panel) panel.hidden = !panel.hidden;
+    const accountPanel = document.querySelector('.account-panel');
+    if (accountPanel) accountPanel.hidden = true;
+    document.querySelector('.admin-bell strong')?.remove();
+  });
+  document.querySelector('[data-toggle-admin-account]')?.addEventListener('click', () => {
+    const panel = document.querySelector('.account-panel');
+    if (panel) panel.hidden = !panel.hidden;
+    const notificationPanel = document.querySelector('.admin-notification-panel');
+    if (notificationPanel) notificationPanel.hidden = true;
+  });
   document.querySelector('#add-user-form')?.addEventListener('submit', (event) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -2742,6 +2873,40 @@ function renderAdmin(user) {
     saveState();
     renderAdmin(user);
   });
+  document.querySelectorAll('[data-approve-signup]').forEach((button) => button.addEventListener('click', () => {
+    const request = (state.signupRequests || []).find((item) => item.id === button.dataset.approveSignup);
+    if (!request) return;
+    if (state.users.some((item) => item.email.toLowerCase() === request.email.toLowerCase())) {
+      request.status = 'rejected';
+      saveState();
+      renderAdmin(user);
+      return;
+    }
+    const newUser = {
+      id: `student-${Date.now()}`,
+      name: request.name,
+      email: request.email,
+      phone: request.phone,
+      password: request.password,
+      role: 'student',
+      accountStatus: 'active',
+      createdAt: new Date().toISOString()
+    };
+    state.users.push(newUser);
+    state.assignments[newUser.id] = [];
+    request.status = 'approved';
+    request.approvedAt = new Date().toISOString();
+    saveState();
+    renderAdmin(user);
+  }));
+  document.querySelectorAll('[data-reject-signup]').forEach((button) => button.addEventListener('click', () => {
+    const request = (state.signupRequests || []).find((item) => item.id === button.dataset.rejectSignup);
+    if (!request) return;
+    request.status = 'rejected';
+    request.rejectedAt = new Date().toISOString();
+    saveState();
+    renderAdmin(user);
+  }));
   document.querySelectorAll('[data-approve-request]').forEach((button) => button.addEventListener('click', () => {
     const request = (state.unlockRequests || []).find((item) => item.id === button.dataset.approveRequest);
     if (!request) return;
