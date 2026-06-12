@@ -1763,6 +1763,7 @@ let testTimer = null;
 let activeTest = null;
 let dashboardCourseTab = 'all';
 let dashboardStatsPeriod = 'weekly';
+let courseDetailTab = 'description';
 
 function routeFromPath() {
   const segments = window.location.pathname.split('/').filter(Boolean).map(decodeURIComponent);
@@ -1836,6 +1837,7 @@ const seedState = {
   progress: {},
   attempts: [],
   lessonTime: {},
+  lessonNotes: {},
   notificationReads: {},
   currentSession: null
 };
@@ -1850,6 +1852,7 @@ function mergeState(saved) {
     progress: saved.progress || {},
     attempts: saved.attempts || [],
     lessonTime: saved.lessonTime || {},
+    lessonNotes: saved.lessonNotes || {},
     notificationReads: saved.notificationReads || {}
   };
 }
@@ -1960,6 +1963,13 @@ function userLessonTime(userId, courseId = course.id) {
   return state.lessonTime[userId][courseId];
 }
 
+function userLessonNotes(userId, courseId = course.id) {
+  if (!state.lessonNotes) state.lessonNotes = {};
+  if (!state.lessonNotes[userId]) state.lessonNotes[userId] = {};
+  if (!state.lessonNotes[userId][courseId]) state.lessonNotes[userId][courseId] = {};
+  return state.lessonNotes[userId][courseId];
+}
+
 function isLessonUnlocked(userId, lessonIndex) {
   const completed = userProgress(userId).completedLessons;
   return lessonIndex === 0 || completed.includes(lessonIndex - 1);
@@ -1992,6 +2002,25 @@ function courseProgressPercent(userId, targetCourse) {
 function courseLogo(item) {
   const src = item.id === 'google-search-ads' ? '/google-ads-logo.svg' : '/search-console-logo.svg';
   return `<div class="course-icon"><img src="${src}" alt="${escapeHtml(item.title)} logo" /></div>`;
+}
+
+function courseSourceLinks(targetCourse) {
+  if (targetCourse.id === 'google-search-ads') {
+    return [
+      ['Google Ads Help', 'About Search campaigns', 'https://support.google.com/google-ads/answer/1722047'],
+      ['Google Ads Help', 'Choose the right keywords', 'https://support.google.com/google-ads/answer/2453981'],
+      ['Google Ads Help', 'About keyword matching options', 'https://support.google.com/google-ads/answer/7478529'],
+      ['Google Ads Help', 'Use Keyword Planner', 'https://support.google.com/google-ads/answer/7337243'],
+      ['Google Ads Help', 'Create effective Search ads', 'https://support.google.com/google-ads/answer/6167122']
+    ];
+  }
+  return [
+    ['Google Search Central', 'Search Console overview', 'https://developers.google.com/search/docs/monitor-debug/search-console-start'],
+    ['Search Console Help', 'Performance report', 'https://support.google.com/webmasters/answer/7576553'],
+    ['Search Console Help', 'URL Inspection tool', 'https://support.google.com/webmasters/answer/9012289'],
+    ['Search Console Help', 'Page indexing report', 'https://support.google.com/webmasters/answer/7440203'],
+    ['Search Console Help', 'Sitemaps report', 'https://support.google.com/webmasters/answer/7451001']
+  ];
 }
 
 function isCourseCompleted(userId, targetCourse) {
@@ -2850,6 +2879,88 @@ function listItems(items) {
   return `<ul>${items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
 }
 
+function renderCourseDetailTab(user, lesson, lessonIndex) {
+  if (courseDetailTab === 'resources') {
+    return `
+      <section class="course-source-panel">
+        <h4>Official sources used for this course</h4>
+        <p>These links point to Google’s official documentation and help pages used while preparing this lesson content.</p>
+        <div class="source-link-list">
+          ${courseSourceLinks(course).map(([source, title, url]) => `
+            <a href="${url}" target="_blank" rel="noopener noreferrer">
+              <span>${source}</span>
+              <strong>${title}</strong>
+              <em>${url}</em>
+            </a>
+          `).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  if (courseDetailTab === 'notes') {
+    const notes = userLessonNotes(user.id)[lessonIndex] || '';
+    return `
+      <section class="course-notes-panel">
+        <h4>My notes</h4>
+        <p>Write your own pointers, examples, reminders, or questions from this lesson. Notes are saved to your account progress.</p>
+        <div class="notes-toolbar" aria-label="Notes formatting tools">
+          <button type="button" data-note-wrap="**">B</button>
+          <button type="button" data-note-wrap="_">I</button>
+          <button type="button" data-note-prefix="- ">• List</button>
+          <button type="button" data-note-prefix="Next action: ">Action</button>
+        </div>
+        <textarea id="lesson-notes-editor" rows="14" placeholder="Example: Check Performance report every Monday and note top queries...">${escapeHtml(notes)}</textarea>
+        <div class="notes-actions">
+          <button class="button primary" data-save-notes>Save notes</button>
+          <span id="notes-save-message"></span>
+        </div>
+      </section>
+    `;
+  }
+
+  if (courseDetailTab === 'assessment') {
+    const attempts = state.attempts
+      .filter((attempt) => attempt.userId === user.id && attempt.courseId === course.id)
+      .slice()
+      .reverse();
+    return `
+      <section class="course-assessment-panel">
+        <h4>Assessment history</h4>
+        <p>Your main test and retest attempts for this course are listed here. Correct answers remain hidden.</p>
+        ${attempts.length ? `
+          <div class="assessment-table">
+            ${attempts.map((attempt, index) => `
+              <article>
+                <span>${index === attempts.length - 1 ? 'Main test' : 'Retest'}</span>
+                <strong>Lesson ${attempt.lessonIndex + 1}: ${attempt.correct}/10</strong>
+                <small>${attempt.passed ? 'Passed' : 'Retake needed'} • ${secondsToClock(attempt.timeSpent)} • ${attempt.violations} warning${attempt.violations === 1 ? '' : 's'} • ${new Date(attempt.createdAt).toLocaleString()}</small>
+              </article>
+            `).join('')}
+          </div>
+        ` : '<div class="empty-card">No assessment attempts yet. Start the lesson test when you are ready.</div>'}
+      </section>
+    `;
+  }
+
+  return `
+    <section class="lesson-intro">
+      <p>${lesson.goal}</p>
+      <h4>Learning Objectives:</h4>
+      ${listItems(lesson.outcomes)}
+    </section>
+    ${renderLessonVisual(lessonIndex)}
+    <section class="lesson-section"><h4>What this means</h4>${lesson.sections.what.map((item) => `<p>${item}</p>`).join('')}</section>
+    <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
+    <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
+    <section class="lesson-section"><h4>How to do it</h4>${listItems(lesson.sections.how)}</section>
+    <section class="lesson-section"><h4>Terminology and glossary</h4><div class="lesson-term-grid">${lesson.glossary.map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`).join('')}</div></section>
+    <section class="lesson-section"><h4>Examples</h4><div class="lesson-example-grid">${lesson.examples.map((example) => `<article class="lesson-example"><h5>${example.title}</h5><p><strong>Problem:</strong> ${example.problem}</p><p><strong>Walkthrough:</strong> ${example.walkthrough}</p><p><strong>Takeaway:</strong> ${example.takeaway}</p></article>`).join('')}</div></section>
+    <section class="lesson-section"><h4>Hands-on practice</h4><div class="practice">${listItems(lesson.practice)}</div></section>
+    <section class="lesson-section"><h4>Lesson test</h4><p>You have 5 minutes. Questions and options are randomized. You may get up to 3 answers wrong. If 4 or more are wrong, you must retake the test.</p><button class="button primary" data-start-test>Start 5-minute test</button></section>
+  `;
+}
+
 function renderLesson(user) {
   setActiveCourse(route.courseId);
   const lessonIndex = Math.max(0, Math.min(route.lesson || 0, course.lessons.length - 1));
@@ -2866,62 +2977,30 @@ function renderLesson(user) {
   const canOpenNext = lessonIndex < course.lessons.length - 1 && isLessonUnlocked(user.id, nextLessonIndex);
   renderShell(user, `
     <section class="course-player platform-course">
-      <aside class="course-rail">
-        <div class="course-rail-card">
-          ${courseLogo(course)}
-          <h2>${course.title}</h2>
-          <p>${course.id === 'google-search-ads' ? 'Marketing Specialist' : 'SEO Foundations'}</p>
-        </div>
-        <nav class="course-rail-nav" aria-label="Course sections">
-          <button data-route="dashboard"><span>▦</span>Overview</button>
-          <button class="active"><span>▤</span>Lessons</button>
-          <button><span>▱</span>Resources</button>
-          <button><span>▣</span>Assignments</button>
-          <button><span>☰</span>Discussion</button>
-        </nav>
-      </aside>
-
       <main class="course-player-main">
-        <div class="course-player-header">
-          <div>
-            <h1>Lesson ${lessonIndex + 1}: ${lesson.title}</h1>
-            <p>${course.title} • Module ${lessonIndex + 1}</p>
+        <div class="course-sticky-head">
+          <button class="button secondary course-back-button" data-route="dashboard">Back to dashboard</button>
+          <div class="course-player-header">
+            <div>
+              <h1>Lesson ${lessonIndex + 1}: ${lesson.title}</h1>
+              <p>${course.title} • Module ${lessonIndex + 1}</p>
+            </div>
+            <div class="course-player-actions">
+              <button class="button secondary" data-start-test>Start test</button>
+              <button class="button primary" data-next-lesson ${canOpenNext ? '' : 'disabled'}>Next lesson</button>
+            </div>
           </div>
-          <div class="course-player-actions">
-            <button class="button secondary" data-start-test>Start test</button>
-            <button class="button primary" data-next-lesson ${canOpenNext ? '' : 'disabled'}>Next lesson</button>
+          <div class="course-detail-tabs" role="tablist" aria-label="Lesson details">
+            <button class="${courseDetailTab === 'description' ? 'active' : ''}" data-course-tab="description">Description</button>
+            <button class="${courseDetailTab === 'resources' ? 'active' : ''}" data-course-tab="resources">Resources (${courseSourceLinks(course).length})</button>
+            <button class="${courseDetailTab === 'notes' ? 'active' : ''}" data-course-tab="notes">Notes</button>
+            <button class="${courseDetailTab === 'assessment' ? 'active' : ''}" data-course-tab="assessment">Assessment</button>
           </div>
         </div>
 
         <article class="lesson-card course-detail-card">
-          <div class="course-detail-tabs" role="tablist" aria-label="Lesson details">
-            <button class="active">Description</button>
-            <button>Resources (${Math.min(3, lesson.glossary.length)})</button>
-            <button>Notes</button>
-            <button>Discussion</button>
-          </div>
           <div class="course-detail-body">
-            <section class="lesson-intro">
-              <p>${lesson.goal}</p>
-              <h4>Learning Objectives:</h4>
-              ${listItems(lesson.outcomes)}
-            </section>
-            <section class="lesson-resources">
-              <h4>Lesson Resources</h4>
-              <div>
-                <article><strong>Lesson workbook.pdf</strong><span>Download</span></article>
-                <article><strong>Practice checklist.xlsx</strong><span>Download</span></article>
-              </div>
-            </section>
-            ${renderLessonVisual(lessonIndex)}
-            <section class="lesson-section"><h4>What this means</h4>${lesson.sections.what.map((item) => `<p>${item}</p>`).join('')}</section>
-            <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
-            <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
-            <section class="lesson-section"><h4>How to do it</h4>${listItems(lesson.sections.how)}</section>
-            <section class="lesson-section"><h4>Terminology and glossary</h4><div class="lesson-term-grid">${lesson.glossary.map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`).join('')}</div></section>
-            <section class="lesson-section"><h4>Examples</h4><div class="lesson-example-grid">${lesson.examples.map((example) => `<article class="lesson-example"><h5>${example.title}</h5><p><strong>Problem:</strong> ${example.problem}</p><p><strong>Walkthrough:</strong> ${example.walkthrough}</p><p><strong>Takeaway:</strong> ${example.takeaway}</p></article>`).join('')}</div></section>
-            <section class="lesson-section"><h4>Hands-on practice</h4><div class="practice">${listItems(lesson.practice)}</div></section>
-            <section class="lesson-section"><h4>Lesson test</h4><p>You have 5 minutes. Questions and options are randomized. You may get up to 3 answers wrong. If 4 or more are wrong, you must retake the test.</p><button class="button primary" data-start-test>Start 5-minute test</button></section>
+            ${renderCourseDetailTab(user, lesson, lessonIndex)}
           </div>
         </article>
       </main>
@@ -2952,9 +3031,40 @@ function renderLesson(user) {
       navigate({view: 'course', courseId: course.id, lesson: Number(button.dataset.lessonNav)});
     });
   });
+  document.querySelectorAll('[data-course-tab]').forEach((button) => {
+    button.addEventListener('click', () => {
+      courseDetailTab = button.dataset.courseTab;
+      renderLesson(user);
+    });
+  });
   document.querySelectorAll('[data-start-test]').forEach((button) => button.addEventListener('click', () => startTest(user, lessonIndex)));
   document.querySelector('[data-next-lesson]')?.addEventListener('click', () => {
     if (canOpenNext) navigate({view: 'course', courseId: course.id, lesson: nextLessonIndex});
+  });
+  document.querySelectorAll('[data-note-wrap], [data-note-prefix]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const editor = document.querySelector('#lesson-notes-editor');
+      if (!editor) return;
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      const selected = editor.value.slice(start, end);
+      const before = editor.value.slice(0, start);
+      const after = editor.value.slice(end);
+      if (button.dataset.noteWrap) {
+        editor.value = `${before}${button.dataset.noteWrap}${selected || 'note'}${button.dataset.noteWrap}${after}`;
+      } else {
+        editor.value = `${before}${button.dataset.notePrefix}${selected}${after}`;
+      }
+      editor.focus();
+    });
+  });
+  document.querySelector('[data-save-notes]')?.addEventListener('click', () => {
+    const editor = document.querySelector('#lesson-notes-editor');
+    if (!editor) return;
+    userLessonNotes(user.id)[lessonIndex] = editor.value;
+    saveState();
+    const message = document.querySelector('#notes-save-message');
+    if (message) message.textContent = 'Saved';
   });
 }
 
