@@ -846,14 +846,14 @@ const lessons = [
       'Schedule the next review date.'
     ],
     mistakes: [
-      'Sending only screenshots without interpretation.',
+      'Sending only notes without interpretation.',
       'Choosing too many tasks and finishing none.',
       'Measuring success only by rankings instead of useful traffic and page quality.'
     ],
     quiz: [
       {
         question: 'What is the main purpose of a monthly Search Console workflow?',
-        options: ['Turn data into practical website improvements.', 'Collect screenshots only.', 'Avoid looking at pages.'],
+        options: ['Turn data into practical website improvements.', 'Collect notes only.', 'Avoid looking at pages.'],
         answer: 0
       },
       {
@@ -959,7 +959,7 @@ const lessons = [
 
 const lessonVisuals = [
   {
-    title: 'Training screenshot: the beginner Search Console map',
+    title: 'Training view: the beginner Search Console map',
     caption: 'Use this map to remember where the main beginner reports live. Start with Performance, then check Indexing, then inspect individual URLs when needed.',
     mode: 'dashboard',
     metrics: [
@@ -983,7 +983,7 @@ const lessonVisuals = [
     callout: 'Example: example.com includes http, https, www, and subdomains.'
   },
   {
-    title: 'Training screenshot: Performance report reading order',
+    title: 'Training view: Performance report reading order',
     caption: 'Read the four numbers together. One number alone can mislead you.',
     mode: 'chart',
     metrics: [
@@ -1007,7 +1007,7 @@ const lessonVisuals = [
     callout: 'Query: “dental implant cost” becomes sections about price factors, process, comfort, and consultation.'
   },
   {
-    title: 'Training screenshot: Page indexing priority view',
+    title: 'Training view: Page indexing priority view',
     caption: 'Do not try to fix every URL first. Start with the pages that matter most to the business.',
     mode: 'status',
     metrics: [
@@ -1031,7 +1031,7 @@ const lessonVisuals = [
     callout: 'Request indexing is a crawl request, not a ranking guarantee.'
   },
   {
-    title: 'Training screenshot: Sitemap submission',
+    title: 'Training view: Sitemap submission',
     caption: 'A sitemap helps Google discover important URLs, but it does not force indexing.',
     mode: 'sitemap',
     metrics: [
@@ -1048,7 +1048,7 @@ const lessonVisuals = [
     ]
   },
   {
-    title: 'Training screenshot: traffic drop diagnosis',
+    title: 'Training view: traffic drop diagnosis',
     caption: 'A calm diagnosis starts by asking which metric changed and where the drop happened.',
     mode: 'chart',
     metrics: [
@@ -1065,7 +1065,7 @@ const lessonVisuals = [
     ]
   },
   {
-    title: 'Training screenshot: safe access review',
+    title: 'Training view: safe access review',
     caption: 'Give people the lowest access level that still lets them do their work.',
     mode: 'permissions',
     metrics: [
@@ -1083,13 +1083,13 @@ const lessonVisuals = [
   },
   {
     title: 'Animated workflow: monthly Search Console review',
-    caption: 'A monthly review should end with a short action plan, not just screenshots.',
+    caption: 'A monthly review should end with a short action plan, not just notes.',
     mode: 'flow',
     steps: ['Review metrics', 'Find pages', 'Check indexing', 'Choose actions'],
     callout: 'Best output: 3 focused improvements for the next 30 days.'
   },
   {
-    title: 'Training screenshot: final audit board',
+    title: 'Training view: final audit board',
     caption: 'The capstone turns Search Console findings into a clear 30-day action plan with owners and due dates.',
     mode: 'permissions',
     metrics: [
@@ -1704,7 +1704,7 @@ const googleSearchAdsLessons = [
       },
       {
         question: 'What should a plain-English report include?',
-        options: ['What changed, what it means, and next actions.', 'Only screenshots.', 'Only technical abbreviations.'],
+        options: ['What changed, what it means, and next actions.', 'Only notes.', 'Only technical abbreviations.'],
         answer: 0
       }
     ]
@@ -1714,12 +1714,12 @@ const googleSearchAdsLessons = [
 const googleAdsVisuals = lessonVisuals.slice(0, googleSearchAdsLessons.length).map((visual, index) => ({
   ...visual,
   title: [
-    'Training screenshot: Search Ads account map',
-    'Training screenshot: campaign structure',
+    'Training view: Search Ads account map',
+    'Training view: campaign structure',
     'Mini animation: keyword to search term',
-    'Training screenshot: responsive search ad builder',
-    'Training screenshot: landing page relevance',
-    'Training screenshot: conversion and bidding dashboard',
+    'Training view: responsive search ad builder',
+    'Training view: landing page relevance',
+    'Training view: conversion and bidding dashboard',
     'Animated workflow: weekly optimization'
   ][index],
   caption: [
@@ -1733,11 +1733,11 @@ const googleAdsVisuals = lessonVisuals.slice(0, googleSearchAdsLessons.length).m
   ][index]
 }));
 
-const seoSuperheroLessons = [
+const seoCourseLessons = [
   {
-    title: 'SEO Superhero basics',
+    title: 'SEO Course basics',
     duration: '60 minutes',
-    goal: 'Understand what SEO is, how search engines work, and how to think like a helpful SEO superhero instead of a shortcut hunter.',
+    goal: 'Understand what SEO is, how search engines work, and how to think like a helpful SEO learner instead of a shortcut hunter.',
     outcomes: [
       'Explain SEO in simple words.',
       'Understand crawling, indexing, ranking, and search intent.',
@@ -1748,7 +1748,7 @@ const seoSuperheroLessons = [
       what: [
         'SEO means improving your website so people can find useful pages through unpaid search results.',
         'Search engines first discover pages, then understand them, then decide when they are useful for a search.',
-        'Your superhero job is not to fool Google. Your job is to make helpful pages easier for people and search engines to understand.'
+        'Your SEO job is not to fool Google. Your job is to make helpful pages easier for people and search engines to understand.'
       ],
       why: [
         'SEO can bring steady visitors without paying for every click.',
@@ -1778,7 +1778,7 @@ const seoSuperheroLessons = [
       {
         title: 'Bakery website',
         problem: 'A bakery wants people to find “custom birthday cakes in Pune.”',
-        walkthrough: 'The SEO superhero checks if there is a clear birthday cake page, real photos, pricing guidance, location details, FAQs, and a simple enquiry button.',
+        walkthrough: 'The SEO learner checks if there is a clear birthday cake page, real photos, pricing guidance, location details, FAQs, and a simple enquiry button.',
         takeaway: 'Good SEO starts by making the best answer for the real searcher.'
       },
       {
@@ -1811,7 +1811,7 @@ const seoSuperheroLessons = [
         answer: 0
       },
       {
-        question: 'What should an SEO superhero focus on first?',
+        question: 'What should an SEO learner focus on first?',
         options: ['Helping users with clear, useful pages.', 'Tricking search engines quickly.', 'Copying competitors word for word.'],
         answer: 0
       }
@@ -2069,7 +2069,7 @@ const seoSuperheroLessons = [
     ]
   },
   {
-    title: 'Technical SEO for non-technical heroes',
+    title: 'Technical SEO for non-technical learners',
     duration: '60 minutes',
     goal: 'Understand technical SEO in plain English so you can spot issues, ask better questions, and work with developers confidently.',
     outcomes: [
@@ -2098,7 +2098,7 @@ const seoSuperheroLessons = [
         'Check if the page opens for users and search engines.',
         'Confirm the page is allowed to be indexed.',
         'Check whether important pages are linked in menus, footers, category pages, or related content.',
-        'Write issues clearly: affected URL, problem, why it matters, screenshot, and expected fix.'
+        'Write issues clearly: affected URL, problem, why it matters, evidence, and expected fix.'
       ]
     },
     glossary: [
@@ -2112,7 +2112,7 @@ const seoSuperheroLessons = [
       {
         title: 'Noindex mistake',
         problem: 'A new service page is live but never appears in search.',
-        walkthrough: 'URL Inspection shows a noindex tag. The SEO superhero asks the developer to remove noindex from the live service page.',
+        walkthrough: 'URL Inspection shows a noindex tag. The SEO learner asks the developer to remove noindex from the live service page.',
         takeaway: 'Small technical settings can block big business pages.'
       },
       {
@@ -2146,7 +2146,7 @@ const seoSuperheroLessons = [
       },
       {
         question: 'What makes a good developer issue note?',
-        options: ['URL, problem, why it matters, screenshot, and expected fix.', 'Only “SEO is broken.”', 'A list of random keywords.'],
+        options: ['URL, problem, why it matters, evidence, and expected fix.', 'Only “SEO is broken.”', 'A list of random keywords.'],
         answer: 0
       }
     ]
@@ -2278,7 +2278,7 @@ const seoSuperheroLessons = [
       {
         title: 'Guaranteed ranking offer',
         problem: 'An agency promises “1000 backlinks in 7 days and first rank guaranteed.”',
-        walkthrough: 'The SEO superhero asks where links will appear, whether they are paid, and whether they are useful for real users. The offer fails the trust test.',
+        walkthrough: 'The SEO learner asks where links will appear, whether they are paid, and whether they are useful for real users. The offer fails the trust test.',
         takeaway: 'If the promise sounds magical, check the risk.'
       },
       {
@@ -2345,7 +2345,7 @@ const seoSuperheroLessons = [
       ],
       how: [
         'Start with the user question and answer it clearly near the top.',
-        'Add original experience: examples, screenshots, steps, comparisons, local details, expert notes, or data.',
+        'Add original experience: examples, notes, steps, comparisons, local details, expert notes, or data.',
         'Use clear sections, summaries, FAQs, and schema when appropriate.',
         'Review AI-assisted content for accuracy, usefulness, tone, and policy risk before publishing.'
       ]
@@ -2485,7 +2485,7 @@ const seoSuperheroLessons = [
     ]
   },
   {
-    title: 'SEO reporting and superhero workflow',
+    title: 'SEO reporting and SEO workflow',
     duration: '60 minutes',
     goal: 'Build a simple weekly and monthly SEO workflow so learners can improve pages calmly and measure real progress.',
     outcomes: [
@@ -2498,7 +2498,7 @@ const seoSuperheroLessons = [
       what: [
         'SEO reporting means turning search data into decisions.',
         'A good report shows what changed, why it may have changed, and what action to take next.',
-        'A superhero workflow is a repeatable routine: check, learn, improve, publish, measure, and repeat.'
+        'An SEO workflow is a repeatable routine: check, learn, improve, publish, measure, and repeat.'
       ],
       why: [
         'SEO takes time, so random daily changes can create confusion.',
@@ -2528,7 +2528,7 @@ const seoSuperheroLessons = [
       {
         title: 'Traffic dropped',
         problem: 'A page loses clicks for one week.',
-        walkthrough: 'The SEO superhero compares 28 days, checks queries, looks for indexing or page changes, and avoids panic from one-day movement.',
+        walkthrough: 'The SEO learner compares 28 days, checks queries, looks for indexing or page changes, and avoids panic from one-day movement.',
         takeaway: 'Good reporting separates noise from real issues.'
       },
       {
@@ -2552,7 +2552,7 @@ const seoSuperheroLessons = [
     quiz: [
       {
         question: 'What should a useful SEO report include?',
-        options: ['What changed, possible reasons, and next actions.', 'Only a screenshot of one ranking.', 'Only competitor gossip.'],
+        options: ['What changed, possible reasons, and next actions.', 'Only a evidence of one ranking.', 'Only competitor gossip.'],
         answer: 0
       },
       {
@@ -2569,10 +2569,228 @@ const seoSuperheroLessons = [
   }
 ];
 
-const seoSuperheroVisuals = lessonVisuals.slice(0, seoSuperheroLessons.length).map((visual, index) => ({
+const seoCourseLessonEnhancements = [
+  {
+    deepDive: [
+      'SEO has four simple stages: people search, Google finds pages, Google understands pages, and Google chooses which pages look useful.',
+      'A good SEO page usually answers one main need clearly, supports the answer with proof, and gives the visitor a clear next step.',
+      'Do not judge SEO only by ranking position. Also check whether the page brings the right visitors, enquiries, sales, calls, or signups.',
+      'For a new website, start with the most important business pages before writing many blogs.',
+      'A simple SEO audit can begin with five questions: Can Google find the page? Can users understand it? Is it useful? Is it trusted? Does it have a next step?'
+    ],
+    quiz: [
+      {question: 'What is SEO mainly trying to improve?', options: ['How easily people find helpful pages in unpaid search.', 'How many colors a website uses.', 'How many passwords a website has.'], answer: 0},
+      {question: 'Which option is an unpaid search result?', options: ['An organic result on Google.', 'A paid search ad.', 'A social media boost.'], answer: 0},
+      {question: 'What does crawling mean?', options: ['Google discovers or revisits a page.', 'A user buys a product.', 'A designer changes a logo.'], answer: 0},
+      {question: 'What does indexing mean?', options: ['Google stores information about a page so it may appear in search.', 'A person writes a review.', 'A website changes its font.'], answer: 0},
+      {question: 'What is search intent?', options: ['The reason behind a search.', 'The page loading speed.', 'The size of an image.'], answer: 0},
+      {question: 'A bakery wants people to find “custom birthday cakes in Pune.” What should the bakery create first?', options: ['A useful birthday cake page with details, photos, location, and enquiry option.', 'A page with only the word cake repeated.', 'A hidden page that users cannot read.'], answer: 0},
+      {question: 'What should a beginner improve first?', options: ['Important pages that real customers need.', 'Random pages with no business value.', 'Only the footer links.'], answer: 0},
+      {question: 'Which metric can show SEO visibility?', options: ['Impressions in search results.', 'Laptop battery percentage.', 'Number of admin users.'], answer: 0},
+      {question: 'What is a good SEO mindset?', options: ['Help users first and make pages clear.', 'Trick search engines first.', 'Copy every competitor exactly.'], answer: 0},
+      {question: 'What should every important page have?', options: ['A clear topic, useful answer, proof, and next step.', 'Only a logo.', 'Only a contact number with no explanation.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Keyword research starts with people, not tools. Listen to customer questions, sales calls, reviews, and support chats.',
+      'Group similar searches together. For example, “SEO course fees,” “SEO course price,” and “SEO training cost” may belong to one fees section or page.',
+      'Match keyword intent to page type. Learning searches often need blogs or guides. Buying searches often need service, product, course, or comparison pages.',
+      'A keyword with low search volume can still be valuable if it brings serious customers.',
+      'Avoid creating five pages for the same idea. One strong page is usually better than many weak duplicate pages.'
+    ],
+    quiz: [
+      {question: 'What is a keyword?', options: ['A word or phrase people search for.', 'A website password.', 'A page color.'], answer: 0},
+      {question: 'Why do we group keywords?', options: ['To plan clear pages around related searches.', 'To hide keywords from users.', 'To remove all headings.'], answer: 0},
+      {question: 'What is a long-tail keyword?', options: ['A longer and more specific search phrase.', 'A keyword written in capital letters.', 'A paid ad headline.'], answer: 0},
+      {question: 'Which search has clearer intent?', options: ['“beginner yoga classes near me”', '“yoga”', '“class”'], answer: 0},
+      {question: 'What is a content map?', options: ['A plan that connects topics and keywords to pages.', 'A map to the office.', 'A list of passwords.'], answer: 0},
+      {question: 'Where can keyword ideas come from?', options: ['Customer questions, Google suggestions, Search Console, and competitors.', 'Only website colors.', 'Only the company logo.'], answer: 0},
+      {question: 'What should you do before writing a new page?', options: ['Understand who is searching and what they need.', 'Repeat a word many times.', 'Delete old useful pages.'], answer: 0},
+      {question: 'Which page fits a buying search best?', options: ['A clear service, product, or course page.', 'A random team birthday post.', 'A hidden test page.'], answer: 0},
+      {question: 'What is keyword difficulty in simple words?', options: ['How hard it may be to compete for a keyword.', 'How hard it is to type a word.', 'How long a website password is.'], answer: 0},
+      {question: 'What is the safest keyword choice for beginners?', options: ['Specific searches that match the business and user need.', 'Only the biggest keyword in the industry.', 'Keywords unrelated to the website.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'The title tag should tell searchers what the page is about and why it is useful.',
+      'The meta description does not guarantee ranking, but it can help people decide whether to click.',
+      'Use one clear H1 for the main page topic. Use H2 and H3 headings to divide sections like benefits, pricing, FAQs, process, and examples.',
+      'Helpful content should answer the main question early, then support it with details, proof, examples, and next steps.',
+      'Keyword use should sound natural. If a sentence sounds strange to a human, rewrite it.'
+    ],
+    quiz: [
+      {question: 'What is on-page SEO?', options: ['Improving things on a page, such as title, headings, content, images, and links.', 'Only buying backlinks.', 'Only changing server settings.'], answer: 0},
+      {question: 'What is a title tag?', options: ['The page title search engines may show in results.', 'A website invoice.', 'An image file size.'], answer: 0},
+      {question: 'What is a meta description?', options: ['A short summary of a page.', 'A private password.', 'A website backup.'], answer: 0},
+      {question: 'A page title says “Home,” but the page is about AC repair in Jaipur. What is a better title?', options: ['AC Repair in Jaipur - Same-Day Service.', 'Home Home Home.', 'Best Best Best.'], answer: 0},
+      {question: 'Why are headings helpful?', options: ['They organize the page for readers and search engines.', 'They hide the page.', 'They replace all content.'], answer: 0},
+      {question: 'What is thin content?', options: ['Content with too little useful information.', 'Content with many images.', 'Content written in paragraphs.'], answer: 0},
+      {question: 'What is keyword stuffing?', options: ['Repeating keywords unnaturally.', 'Using a keyword naturally once or twice.', 'Writing a useful answer.'], answer: 0},
+      {question: 'Where should the main page answer appear?', options: ['Near the top, so users quickly know they are in the right place.', 'Only at the very bottom.', 'Only inside hidden text.'], answer: 0},
+      {question: 'What should a service page include?', options: ['Clear service details, proof, FAQs, location if needed, and contact option.', 'Only one vague sentence.', 'Only copied competitor text.'], answer: 0},
+      {question: 'What is a good content habit?', options: ['Write for people first, then make it easy for search engines to understand.', 'Write only for bots.', 'Avoid answering the main question.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Internal links act like helpful signboards. They guide users to related pages and help search engines discover important pages.',
+      'Anchor text should explain the destination. “View our SEO course syllabus” is clearer than “click here.”',
+      'Alt text should describe useful image meaning. Decorative images do not need keyword-heavy descriptions.',
+      'Trust signals reduce doubt. Add real photos, reviews, author details, policies, case studies, contact details, and clear business information.',
+      'A call to action should match the page intent. A blog may invite reading another guide; a service page may invite a call or form enquiry.'
+    ],
+    quiz: [
+      {question: 'What is an internal link?', options: ['A link from one page on your site to another page on your site.', 'A paid ad.', 'A social media password.'], answer: 0},
+      {question: 'What is anchor text?', options: ['The clickable words in a link.', 'The color of a button.', 'The size of a photo.'], answer: 0},
+      {question: 'Which anchor text is clearer?', options: ['SEO course syllabus.', 'Click here.', 'This one.'], answer: 0},
+      {question: 'What is alt text?', options: ['Text that describes an image when needed.', 'A secret ranking code.', 'A payment method.'], answer: 0},
+      {question: 'Why are trust signals useful?', options: ['They help visitors feel the page or business is reliable.', 'They hide weak content.', 'They replace all pages.'], answer: 0},
+      {question: 'Which is a trust signal?', options: ['Real reviews and clear contact details.', 'Fake reviews.', 'Hidden business name.'], answer: 0},
+      {question: 'What is a call to action?', options: ['A clear next step like Book demo or Call now.', 'A page loading error.', 'A keyword tool.'], answer: 0},
+      {question: 'What should image alt text avoid?', options: ['Unnatural keyword stuffing.', 'Clear description.', 'Accessibility.'], answer: 0},
+      {question: 'Where can internal links be added?', options: ['Menus, paragraphs, related sections, FAQs, and footers.', 'Only in hidden text.', 'Only in passwords.'], answer: 0},
+      {question: 'What is a good page experience for users?', options: ['Clear information, proof, links, and next steps.', 'Confusing text and no contact option.', 'Only popups.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Technical SEO checks whether important pages can be opened, crawled, indexed, and understood.',
+      'Robots.txt can guide crawling, but it should not be used casually to hide important pages from search.',
+      'A sitemap helps search engines discover important URLs, but it does not force ranking.',
+      'Core Web Vitals are page experience signals connected to loading, interaction, and visual stability.',
+      'Structured data can help search engines understand page details like products, FAQs, reviews, articles, events, and organization information.'
+    ],
+    quiz: [
+      {question: 'What is technical SEO?', options: ['Making sure search engines can access, understand, and show important pages.', 'Only writing social posts.', 'Only designing a logo.'], answer: 0},
+      {question: 'What does crawlability mean?', options: ['How easily search engines can discover and access pages.', 'How fast a user types.', 'How many colors a page has.'], answer: 0},
+      {question: 'What does indexability mean?', options: ['Whether a page can be included in search results.', 'Whether a page has a phone number.', 'Whether an image is blue.'], answer: 0},
+      {question: 'What does noindex tell search engines?', options: ['Do not index this page.', 'Rank this page first.', 'Make this page faster.'], answer: 0},
+      {question: 'What is a sitemap?', options: ['A file that lists important website URLs.', 'A list of employee names.', 'A payment receipt.'], answer: 0},
+      {question: 'What is HTTPS useful for?', options: ['A more secure connection for users.', 'Writing longer titles.', 'Buying backlinks.'], answer: 0},
+      {question: 'What is structured data?', options: ['Extra page information in a format search engines can understand.', 'A private chat message.', 'A design moodboard.'], answer: 0},
+      {question: 'What should you include in a developer SEO issue note?', options: ['URL, problem, why it matters, and expected fix.', 'Only “fix SEO.”', 'Only a keyword list.'], answer: 0},
+      {question: 'What should you check on mobile?', options: ['Whether the page is easy to use and loads well.', 'Only the desktop menu.', 'Only the admin panel.'], answer: 0},
+      {question: 'Which technical issue is serious?', options: ['An important service page accidentally blocked from indexing.', 'A paragraph has two sentences.', 'The page has a contact button.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Off-page SEO is reputation building. It includes links, mentions, reviews, PR, citations, partnerships, and community visibility.',
+      'A backlink is more valuable when it comes from a real, relevant, trusted page that users may actually visit.',
+      'Local citations should keep business name, address, phone, and website consistent.',
+      'Digital PR works best when you have something useful to share: data, expert tips, tools, guides, stories, or community work.',
+      'Do not chase link count blindly. A few relevant links can be better than many low-quality links.'
+    ],
+    quiz: [
+      {question: 'What is off-page SEO?', options: ['SEO work outside your website that builds reputation and discovery.', 'Only editing page headings.', 'Only changing image size.'], answer: 0},
+      {question: 'What is a backlink?', options: ['A link from another website to your website.', 'A heading on your own page.', 'A website password.'], answer: 0},
+      {question: 'What kind of backlink is usually better?', options: ['A relevant link from a real and trusted website.', 'A hidden paid link from a spam site.', 'A random link from an unrelated page.'], answer: 0},
+      {question: 'What is referral traffic?', options: ['Visitors who come through links from other websites.', 'Visitors who type a password.', 'Visitors who never open the site.'], answer: 0},
+      {question: 'What is a local citation?', options: ['An online mention of business details like name, address, and phone.', 'A blog heading.', 'A test score.'], answer: 0},
+      {question: 'Which off-page activity is safe?', options: ['Earning mentions through useful resources and real relationships.', 'Buying fake links in bulk.', 'Creating fake reviews.'], answer: 0},
+      {question: 'Why do reviews matter?', options: ['They can help users trust and choose a business.', 'They replace the website.', 'They guarantee first ranking.'], answer: 0},
+      {question: 'What should outreach offer?', options: ['A real reason or value for the other person.', 'Only “give me link.”', 'A copied article.'], answer: 0},
+      {question: 'What should beginners avoid?', options: ['Spammy link schemes.', 'Useful partnerships.', 'Real customer reviews.'], answer: 0},
+      {question: 'What is digital PR?', options: ['Getting online attention through useful stories, data, or expert input.', 'Changing a password.', 'Deleting all content.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Black hat SEO means manipulating search engines instead of helping users. It can damage traffic, trust, and business reputation.',
+      'Common red flags include guaranteed rankings, bulk backlinks, hidden text, copied pages, fake reviews, and pages made only for search engines.',
+      'A doorway page is a low-value page made to catch searches and push users somewhere else.',
+      'A manual action can happen when a site violates spam policies and a reviewer takes action.',
+      'The safe alternative is simple: create useful pages, earn real links, be transparent, and document SEO work.'
+    ],
+    quiz: [
+      {question: 'What is black hat SEO?', options: ['Risky tactics that try to manipulate search engines.', 'Writing useful content.', 'Making pages easier to read.'], answer: 0},
+      {question: 'An agency says, “We will create 1000 backlinks in 7 days and guarantee rank 1.” What should you do?', options: ['Treat it as a red flag and ask about risk and quality.', 'Approve it immediately.', 'Give them all website passwords.'], answer: 0},
+      {question: 'What is keyword stuffing?', options: ['Repeating keywords unnaturally.', 'Writing a helpful heading.', 'Adding a clear FAQ.'], answer: 0},
+      {question: 'What is cloaking?', options: ['Showing different content to users and search engines to mislead rankings.', 'Adding clear contact details.', 'Improving page speed.'], answer: 0},
+      {question: 'What is a doorway page?', options: ['A low-value page made mainly to capture searches and send users elsewhere.', 'A useful service page.', 'A privacy policy.'], answer: 0},
+      {question: 'What is a link scheme?', options: ['A manipulative practice to create ranking links.', 'A natural link from a partner page.', 'An internal menu link.'], answer: 0},
+      {question: 'What can black hat SEO cause?', options: ['Ranking drops, manual actions, and loss of trust.', 'Guaranteed long-term success.', 'Automatic customer support.'], answer: 0},
+      {question: 'Which is a safer choice?', options: ['Helpful content and real reputation building.', 'Fake reviews.', 'Copied pages.'], answer: 0},
+      {question: 'What should you ask before using an SEO tactic?', options: ['Does this help real users?', 'Can this be hidden?', 'Can we trick Google faster?'], answer: 0},
+      {question: 'Why document SEO changes?', options: ['So risky or harmful changes can be reviewed and reversed.', 'To hide work from the team.', 'To avoid learning.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'AI SEO does not replace normal SEO. It adds a new layer where content should be clear enough for people, search engines, and AI summaries to understand.',
+      'AI tools are useful for brainstorming questions, outlines, summaries, tables, and plain-English rewrites.',
+      'Human review is still required because AI can make mistakes, invent facts, or sound generic.',
+      'Original value can come from real experience, customer examples, photos, product details, expert notes, comparisons, data, and clear opinions.',
+      'Avoid publishing many AI-made pages that say the same generic thing. That creates low-value content risk.'
+    ],
+    quiz: [
+      {question: 'What is AI SEO?', options: ['Preparing useful content for AI-influenced search and real users.', 'Letting AI publish everything without review.', 'Hiding content from visitors.'], answer: 0},
+      {question: 'What should AI tools help with?', options: ['Ideas, outlines, clarity, summaries, and drafts that humans review.', 'Fake facts.', 'Copying competitors exactly.'], answer: 0},
+      {question: 'Why is human review important for AI content?', options: ['AI can make mistakes or sound generic.', 'Human review is never needed.', 'AI always knows your business perfectly.'], answer: 0},
+      {question: 'What is original value?', options: ['Useful details, examples, data, or experience that are not generic.', 'Copied text.', 'More repeated keywords.'], answer: 0},
+      {question: 'What is an AI Overview?', options: ['An AI-generated summary that can appear in Google Search for some queries.', 'A website password.', 'A paid ad budget.'], answer: 0},
+      {question: 'How should a page answer an important question?', options: ['Clearly and early, then with supporting detail.', 'Only after 5 unrelated paragraphs.', 'Only in hidden text.'], answer: 0},
+      {question: 'What should you avoid with AI content?', options: ['Publishing many low-value generic pages.', 'Checking facts.', 'Adding expert examples.'], answer: 0},
+      {question: 'Which content is stronger?', options: ['Content with real examples, expert review, and clear structure.', 'Generic AI text with no facts checked.', 'Copied paragraphs.'], answer: 0},
+      {question: 'Does AI SEO replace technical SEO?', options: ['No, technical SEO still matters.', 'Yes, always.', 'Only for local businesses.'], answer: 0},
+      {question: 'What is a good use of AI for a beginner?', options: ['Ask for user questions, then answer them with real business knowledge.', 'Publish every answer instantly.', 'Create fake reviews.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'Local SEO is for searches where location matters. The user may want to visit, call, book, or compare nearby providers.',
+      'Google Business Profile details should be accurate: name, category, phone, address or service area, hours, services, website, and photos.',
+      'Reviews should be real and honest. Replying professionally shows future customers that the business cares.',
+      'Local website pages should include real service details, area proof, FAQs, contact options, and helpful information.',
+      'Do not create fake addresses or copied city pages. Local SEO should reflect real service areas.'
+    ],
+    quiz: [
+      {question: 'What is local SEO?', options: ['Helping a business appear for nearby or area-based searches.', 'Only writing national news.', 'Only changing a logo.'], answer: 0},
+      {question: 'What does NAP mean?', options: ['Name, address, and phone number.', 'New article plan.', 'No ads policy.'], answer: 0},
+      {question: 'What is Google Business Profile?', options: ['A free Google profile for eligible local businesses.', 'A private password manager.', 'A design template.'], answer: 0},
+      {question: 'Which information should be accurate online?', options: ['Business name, phone, hours, address or service area, and website.', 'Only the logo size.', 'Only old offers.'], answer: 0},
+      {question: 'What is a safe review practice?', options: ['Ask real customers for honest reviews.', 'Create fake reviews.', 'Pay only for five-star reviews.'], answer: 0},
+      {question: 'What is local intent?', options: ['A search where the user wants something nearby or in a specific area.', 'A search with no purpose.', 'A website setting.'], answer: 0},
+      {question: 'What should a local service page include?', options: ['Real service details, location information, FAQs, proof, and contact options.', 'Copied city names only.', 'Hidden text.'], answer: 0},
+      {question: 'What should a business do with negative reviews?', options: ['Reply professionally and try to solve the issue.', 'Delete the website.', 'Post fake positive reviews.'], answer: 0},
+      {question: 'What is a service area?', options: ['The locations where a business serves customers.', 'A private admin page.', 'A keyword report only.'], answer: 0},
+      {question: 'What should local SEO avoid?', options: ['Fake addresses and copied city pages.', 'Accurate hours.', 'Real photos.'], answer: 0}
+    ]
+  },
+  {
+    deepDive: [
+      'SEO reporting should help decision-making. A report is weak if it only shows numbers and gives no action.',
+      'Track visibility metrics like impressions and clicks, quality metrics like CTR and average position, and business metrics like leads, sales, bookings, calls, or signups.',
+      'Use longer comparisons like 28 days or month over month instead of reacting to one bad day.',
+      'Keep an SEO backlog with tasks, priority, owner, date completed, and expected result.',
+      'A good monthly summary can include wins, losses, reasons, completed work, next priorities, and risks.'
+    ],
+    quiz: [
+      {question: 'What is an SEO report for?', options: ['Turning search data into clear decisions and next actions.', 'Showing numbers with no meaning.', 'Replacing the website.'], answer: 0},
+      {question: 'What is a KPI?', options: ['A key performance indicator used to measure progress.', 'A website color code.', 'A password type.'], answer: 0},
+      {question: 'What is an impression?', options: ['When a search result is shown to a user.', 'When a user changes a password.', 'When a page is deleted.'], answer: 0},
+      {question: 'What is CTR?', options: ['The percentage of impressions that become clicks.', 'The number of images on a page.', 'A hosting plan.'], answer: 0},
+      {question: 'What is a conversion?', options: ['A valuable action like a lead, sale, call, booking, or signup.', 'A hidden keyword.', 'A website font.'], answer: 0},
+      {question: 'If one day of clicks drops, what should a beginner do first?', options: ['Compare a longer period and investigate calmly.', 'Delete the page immediately.', 'Stuff more keywords everywhere.'], answer: 0},
+      {question: 'What should every useful report end with?', options: ['Clear next actions.', 'Only notes.', 'Only jokes.'], answer: 0},
+      {question: 'What is an SEO backlog?', options: ['A prioritized list of SEO tasks.', 'A list of passwords.', 'A list of office chairs.'], answer: 0},
+      {question: 'Which metric is closest to business value?', options: ['Leads, calls, bookings, sales, or signups.', 'Only font size.', 'Only logo width.'], answer: 0},
+      {question: 'Why record SEO changes?', options: ['So you can connect actions with results later.', 'So nobody knows what happened.', 'So reports become confusing.'], answer: 0}
+    ]
+  }
+];
+
+seoCourseLessonEnhancements.forEach((enhancement, index) => {
+  seoCourseLessons[index].deepDive = enhancement.deepDive;
+  seoCourseLessons[index].quiz = enhancement.quiz;
+});
+
+const seoCourseVisuals = lessonVisuals.slice(0, seoCourseLessons.length).map((visual, index) => ({
   ...visual,
   title: [
-    'Training screenshot: SEO superhero map',
+    'Training view: SEO learner map',
     'Worksheet: keyword and intent planner',
     'Page markup: titles and headings',
     'Checklist: links, images, and trust',
@@ -2591,7 +2809,7 @@ const seoSuperheroVisuals = lessonVisuals.slice(0, seoSuperheroLessons.length).m
     'Off-page SEO is reputation building, not link begging.',
     'Black hat tactics look tempting, but they put the website asset at risk.',
     'AI SEO rewards clear answers, original value, expert review, and helpful structure.',
-    'A superhero workflow turns reports into calm weekly action.'
+    'An SEO workflow turns reports into calm weekly action.'
   ][index]
 }));
 
@@ -2611,11 +2829,11 @@ const courses = [
     visuals: googleAdsVisuals
   },
   {
-    id: 'seo-superhero',
-    title: 'SEO Superhero',
+    id: 'seo-course',
+    title: 'SEO Course',
     subtitle: 'Learn on-page, off-page, technical, black-hat safety, local, reporting, and AI SEO in easy English.',
-    lessons: seoSuperheroLessons,
-    visuals: seoSuperheroVisuals
+    lessons: seoCourseLessons,
+    visuals: seoCourseVisuals
   }
 ];
 
@@ -2893,12 +3111,12 @@ function courseProgressPercent(userId, targetCourse) {
 }
 
 function courseLogo(item) {
-  const src = item.id === 'google-search-ads' ? '/google-ads-logo.svg' : item.id === 'seo-superhero' ? '/seo-logo.svg' : '/search-console-logo.svg';
+  const src = item.id === 'google-search-ads' ? '/google-ads-logo.svg' : item.id === 'seo-course' ? '/seo-logo.svg' : '/search-console-logo.svg';
   return `<div class="course-icon"><img src="${src}" alt="${escapeHtml(item.title)} logo" /></div>`;
 }
 
 function courseSourceLinks(targetCourse) {
-  if (targetCourse.id === 'seo-superhero') {
+  if (targetCourse.id === 'seo-course') {
     return [
       ['Google Search Central', 'SEO Starter Guide', 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide'],
       ['Google Search Central', 'Creating helpful, reliable, people-first content', 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content'],
@@ -4164,6 +4382,7 @@ function renderCourseDetailTab(user, lesson, lessonIndex) {
     <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
     <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
     <section class="lesson-section"><h4>How to do it</h4>${listItems(lesson.sections.how)}</section>
+    ${lesson.deepDive ? `<section class="lesson-section"><h4>Detailed checklist</h4>${listItems(lesson.deepDive)}</section>` : ''}
     <section class="lesson-section"><h4>Terminology and glossary</h4><div class="lesson-term-grid">${lesson.glossary.map(([term, definition]) => `<article><h5>${term}</h5><p>${definition}</p></article>`).join('')}</div></section>
     <section class="lesson-section"><h4>Examples</h4><div class="lesson-example-grid">${lesson.examples.map((example) => `<article class="lesson-example"><h5>${example.title}</h5><p><strong>Problem:</strong> ${example.problem}</p><p><strong>Walkthrough:</strong> ${example.walkthrough}</p><p><strong>Takeaway:</strong> ${example.takeaway}</p></article>`).join('')}</div></section>
     <section class="lesson-section"><h4>Hands-on practice</h4><div class="practice">${listItems(lesson.practice)}</div></section>
