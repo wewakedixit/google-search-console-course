@@ -4160,7 +4160,6 @@ function renderCourseDetailTab(user, lesson, lessonIndex) {
       <h4>Learning Objectives:</h4>
       ${listItems(lesson.outcomes)}
     </section>
-    ${renderLessonVisual(lessonIndex)}
     <section class="lesson-section"><h4>What this means</h4>${lesson.sections.what.map((item) => `<p>${item}</p>`).join('')}</section>
     <section class="lesson-section"><h4>Why this matters</h4>${lesson.sections.why.map((item) => `<p>${item}</p>`).join('')}</section>
     <section class="lesson-section"><h4>Where you use it</h4>${lesson.sections.where.map((item) => `<p>${item}</p>`).join('')}</section>
