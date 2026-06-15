@@ -1733,6 +1733,868 @@ const googleAdsVisuals = lessonVisuals.slice(0, googleSearchAdsLessons.length).m
   ][index]
 }));
 
+const seoSuperheroLessons = [
+  {
+    title: 'SEO Superhero basics',
+    duration: '60 minutes',
+    goal: 'Understand what SEO is, how search engines work, and how to think like a helpful SEO superhero instead of a shortcut hunter.',
+    outcomes: [
+      'Explain SEO in simple words.',
+      'Understand crawling, indexing, ranking, and search intent.',
+      'Know why helpful pages win more trust than trick pages.',
+      'Create a simple SEO mission for one website.'
+    ],
+    sections: {
+      what: [
+        'SEO means improving your website so people can find useful pages through unpaid search results.',
+        'Search engines first discover pages, then understand them, then decide when they are useful for a search.',
+        'Your superhero job is not to fool Google. Your job is to make helpful pages easier for people and search engines to understand.'
+      ],
+      why: [
+        'SEO can bring steady visitors without paying for every click.',
+        'Good SEO also improves the website for real users: clearer pages, faster answers, better structure, and more trust.',
+        'A beginner should focus on usefulness first, then clarity, then technical health.'
+      ],
+      where: [
+        'Use Google Search to understand what people already see.',
+        'Use Google Search Console to check performance, indexing, and page issues.',
+        'Use your website pages, blog posts, product pages, service pages, and local pages as your SEO playground.'
+      ],
+      how: [
+        'Pick one important page.',
+        'Write down who the page helps and what question it answers.',
+        'Check whether the title, headings, first paragraph, images, and links all support that answer.',
+        'Measure progress with clicks, impressions, rankings, leads, and user actions, not only one keyword position.'
+      ]
+    },
+    glossary: [
+      ['SEO', 'Improving a website so people can find helpful pages in unpaid search results.'],
+      ['Crawling', 'When a search engine discovers or revisits a page.'],
+      ['Indexing', 'When a search engine stores information about a page so it may appear in results.'],
+      ['Ranking', 'The order search results appear for a query.'],
+      ['Search intent', 'The reason behind a search, such as learning, comparing, buying, or finding a place.']
+    ],
+    examples: [
+      {
+        title: 'Bakery website',
+        problem: 'A bakery wants people to find “custom birthday cakes in Pune.”',
+        walkthrough: 'The SEO superhero checks if there is a clear birthday cake page, real photos, pricing guidance, location details, FAQs, and a simple enquiry button.',
+        takeaway: 'Good SEO starts by making the best answer for the real searcher.'
+      },
+      {
+        title: 'Coaching institute',
+        problem: 'The institute writes blogs but gets no leads.',
+        walkthrough: 'They map each blog to a student question and link useful blogs to course enquiry pages.',
+        takeaway: 'Traffic is useful when it connects to the learner’s next step.'
+      }
+    ],
+    practice: [
+      'Choose one website and write its SEO mission in one sentence.',
+      'List 5 searches that ideal customers may type.',
+      'Mark the search intent for each search: learn, compare, buy, or local.',
+      'Pick one page that should answer one of those searches better.'
+    ],
+    mistakes: [
+      'Thinking SEO is only keywords.',
+      'Trying to rank every page for every topic.',
+      'Ignoring the real person behind the search.'
+    ],
+    quiz: [
+      {
+        question: 'What is the best beginner-friendly meaning of SEO?',
+        options: ['Making helpful pages easier to find in unpaid search.', 'Buying ads for every keyword.', 'Hiding text so Google sees more words.'],
+        answer: 0
+      },
+      {
+        question: 'What does search intent mean?',
+        options: ['The reason someone searched.', 'The color of a website button.', 'The amount paid for a click.'],
+        answer: 0
+      },
+      {
+        question: 'What should an SEO superhero focus on first?',
+        options: ['Helping users with clear, useful pages.', 'Tricking search engines quickly.', 'Copying competitors word for word.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Keyword research and content planning',
+    duration: '60 minutes',
+    goal: 'Learn how to find useful search topics and turn them into a clear content plan without getting lost in tools.',
+    outcomes: [
+      'Group keywords by topic and intent.',
+      'Choose keywords that match business goals.',
+      'Understand short-tail and long-tail keywords.',
+      'Build a simple content map for important pages.'
+    ],
+    sections: {
+      what: [
+        'Keyword research means understanding the words people use when they search for your topic, product, service, or problem.',
+        'A keyword is not just a word. It is a clue about what someone wants.',
+        'A content plan connects search topics to the right page type: homepage, service page, product page, blog, comparison page, or FAQ.'
+      ],
+      why: [
+        'Without keyword research, you may write pages nobody searches for or target searches that do not fit your offer.',
+        'Good research helps you avoid duplicate pages that compete with each other.',
+        'It helps non-technical teams decide what to write, improve, and measure.'
+      ],
+      where: [
+        'Use Google autocomplete, People Also Ask, competitor pages, customer questions, Search Console, and keyword tools.',
+        'Use sales calls, WhatsApp chats, reviews, and support questions to discover real language.',
+        'Use a spreadsheet to group searches by theme and intent.'
+      ],
+      how: [
+        'Start with 5 seed topics around your business.',
+        'Collect related searches and customer questions.',
+        'Group similar searches into clusters.',
+        'Assign each cluster to one page, so each page has a clear job.',
+        'Choose beginner-friendly wins: specific searches with clear intent.'
+      ]
+    },
+    glossary: [
+      ['Keyword', 'A word or phrase people search for.'],
+      ['Topic cluster', 'A group of related searches that belong together.'],
+      ['Long-tail keyword', 'A longer, more specific search phrase.'],
+      ['Search volume', 'An estimate of how often people search a phrase.'],
+      ['Content map', 'A plan that matches topics and keywords to pages.']
+    ],
+    examples: [
+      {
+        title: 'Yoga studio',
+        problem: 'The studio wants more beginners but only targets “yoga.”',
+        walkthrough: 'They find specific searches like “beginner yoga classes near me,” “yoga for back pain,” and “morning yoga batch.” Each search gets mapped to a useful page or section.',
+        takeaway: 'Specific searches often reveal clearer needs.'
+      },
+      {
+        title: 'Software training institute',
+        problem: 'The institute writes random blogs about every tool.',
+        walkthrough: 'They group topics into Python course, data analytics course, career questions, fees, syllabus, and placement support.',
+        takeaway: 'Clusters make content easier to plan and easier for learners to navigate.'
+      }
+    ],
+    practice: [
+      'Write 10 questions your customers ask before buying.',
+      'Group them into 3 topic clusters.',
+      'Choose one main page for each cluster.',
+      'Mark whether each searcher wants to learn, compare, buy, or find a local provider.'
+    ],
+    mistakes: [
+      'Choosing only high-volume keywords with unclear intent.',
+      'Making many pages for almost the same keyword.',
+      'Ignoring customer language and only trusting tools.'
+    ],
+    quiz: [
+      {
+        question: 'What is keyword research mainly used for?',
+        options: ['Understanding what people search and planning useful pages.', 'Adding the same word 100 times.', 'Choosing website colors.'],
+        answer: 0
+      },
+      {
+        question: 'Why can long-tail keywords be useful?',
+        options: ['They are often more specific and easier to match with a helpful answer.', 'They always have the highest volume.', 'They do not need content.'],
+        answer: 0
+      },
+      {
+        question: 'What is a content map?',
+        options: ['A plan matching topics and keywords to pages.', 'A website password list.', 'A report of paid ad budgets.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'On-page SEO: titles, headings, and helpful content',
+    duration: '60 minutes',
+    goal: 'Learn how to improve a page so users and search engines can quickly understand its topic, value, and next step.',
+    outcomes: [
+      'Write clear title tags and meta descriptions.',
+      'Use headings to organize a page.',
+      'Make content helpful, complete, and easy to scan.',
+      'Avoid keyword stuffing and thin content.'
+    ],
+    sections: {
+      what: [
+        'On-page SEO means improving the visible and hidden parts of a page: title, description, headings, paragraphs, images, links, and calls to action.',
+        'A title tag is often used as the clickable blue headline in search results.',
+        'Headings help readers scan the page and help search engines understand the page structure.'
+      ],
+      why: [
+        'A clear page earns more trust because users instantly know they are in the right place.',
+        'Better titles and descriptions can improve clicks from search results.',
+        'Helpful content reduces confusion and supports leads, sales, bookings, or learning.'
+      ],
+      where: [
+        'Edit title tags and meta descriptions in your CMS or SEO plugin.',
+        'Use H1 for the main page topic and H2/H3 for sections.',
+        'Use the first screen of the page to confirm the promise made in search results.'
+      ],
+      how: [
+        'Write one clear title that includes the main topic and value.',
+        'Write a meta description that tells people what they will get.',
+        'Use headings like signboards: clear, short, and helpful.',
+        'Answer the main question early, then add details, examples, FAQs, and next steps.',
+        'Use keywords naturally, like a helpful teacher, not like a robot.'
+      ]
+    },
+    glossary: [
+      ['Title tag', 'The page title search engines may show as the result headline.'],
+      ['Meta description', 'A short page summary search engines may use as a snippet.'],
+      ['Heading', 'A page section title, such as H1, H2, or H3.'],
+      ['Thin content', 'Content that gives too little useful information.'],
+      ['Keyword stuffing', 'Repeating keywords unnaturally to manipulate rankings.']
+    ],
+    examples: [
+      {
+        title: 'Weak service page',
+        problem: 'A page title says “Home” and the first paragraph says only “We provide best services.”',
+        walkthrough: 'The title becomes “AC Repair in Jaipur - Same-Day Service.” The page adds service areas, common issues, pricing guidance, reviews, and booking steps.',
+        takeaway: 'Specific, helpful pages beat vague pages.'
+      },
+      {
+        title: 'Blog post improvement',
+        problem: 'A blog about “SEO tips” has one long block of text.',
+        walkthrough: 'It is reorganized with headings, examples, checklist sections, and a short summary.',
+        takeaway: 'Structure makes content easier to read and easier to understand.'
+      }
+    ],
+    practice: [
+      'Pick one page and rewrite its title tag.',
+      'Write one meta description under 160 characters.',
+      'Add 5 helpful H2 headings.',
+      'Check whether the first paragraph clearly answers the searcher’s need.'
+    ],
+    mistakes: [
+      'Using the same title on many pages.',
+      'Writing for search engines but confusing humans.',
+      'Adding keywords where they sound unnatural.'
+    ],
+    quiz: [
+      {
+        question: 'What is on-page SEO?',
+        options: ['Improving page elements like titles, headings, content, images, and links.', 'Only building backlinks.', 'Only buying ads.'],
+        answer: 0
+      },
+      {
+        question: 'What is keyword stuffing?',
+        options: ['Repeating keywords unnaturally to manipulate rankings.', 'Using one clear keyword naturally.', 'Writing helpful examples.'],
+        answer: 0
+      },
+      {
+        question: 'Why are headings useful?',
+        options: ['They organize the page for readers and search engines.', 'They hide content from users.', 'They replace all paragraphs.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'On-page SEO: links, images, and trust signals',
+    duration: '60 minutes',
+    goal: 'Use internal links, image basics, FAQs, reviews, author information, and clear calls to action to make pages more useful.',
+    outcomes: [
+      'Add internal links that guide users.',
+      'Write useful image alt text.',
+      'Understand trust signals and E-E-A-T style thinking.',
+      'Improve a page without making it cluttered.'
+    ],
+    sections: {
+      what: [
+        'Internal links connect pages within your own website.',
+        'Image SEO means using relevant images, sensible filenames, alt text, and fast-loading image files.',
+        'Trust signals are details that help users believe the page: real photos, experience, reviews, credentials, policies, contact details, and transparent information.'
+      ],
+      why: [
+        'Internal links help users discover related pages and help search engines find important pages.',
+        'Alt text helps explain images when they cannot be seen and can support accessibility.',
+        'Trust signals matter because users hesitate when a page looks anonymous or unclear.'
+      ],
+      where: [
+        'Add internal links inside paragraphs, related sections, menus, breadcrumbs, and FAQ answers.',
+        'Add image alt text in your CMS image settings.',
+        'Add trust details on service pages, product pages, author pages, about pages, and contact pages.'
+      ],
+      how: [
+        'Link from helpful blog posts to relevant service or product pages.',
+        'Use anchor text that describes the destination, such as “beginner SEO course,” not “click here.”',
+        'Write alt text that explains the image when it adds meaning.',
+        'Add proof: testimonials, results, photos, author details, process, guarantees, or clear contact options.'
+      ]
+    },
+    glossary: [
+      ['Internal link', 'A link from one page on your website to another page on your website.'],
+      ['Anchor text', 'The clickable words in a link.'],
+      ['Alt text', 'Text that describes an image for accessibility and context.'],
+      ['Trust signal', 'A detail that makes users feel the page or business is reliable.'],
+      ['Call to action', 'A clear next step, such as Call now, Book demo, or Download guide.']
+    ],
+    examples: [
+      {
+        title: 'College course page',
+        problem: 'A digital marketing course page has no proof or related links.',
+        walkthrough: 'The page adds student testimonials, trainer bio, syllabus link, fee FAQ, placement details, and links to SEO and Google Ads lesson pages.',
+        takeaway: 'Trust and navigation help users move from curiosity to action.'
+      },
+      {
+        title: 'Product image',
+        problem: 'An ecommerce product image has alt text “image123.”',
+        walkthrough: 'It changes to “blue cotton kurta with round neck and three-quarter sleeves.”',
+        takeaway: 'Useful alt text describes what matters in the image.'
+      }
+    ],
+    practice: [
+      'Find 3 pages that should link to your most important page.',
+      'Write natural anchor text for each link.',
+      'Review 5 images and improve their alt text.',
+      'Add 3 trust signals to one service or product page.'
+    ],
+    mistakes: [
+      'Linking every keyword to the same page.',
+      'Writing alt text stuffed with keywords.',
+      'Hiding contact details or proof from important pages.'
+    ],
+    quiz: [
+      {
+        question: 'What is an internal link?',
+        options: ['A link from one page on your site to another page on your site.', 'A paid ad link.', 'A link that only admins can see.'],
+        answer: 0
+      },
+      {
+        question: 'What makes good anchor text?',
+        options: ['Words that describe the page being linked to.', 'Only “click here” everywhere.', 'A random emoji.'],
+        answer: 0
+      },
+      {
+        question: 'Why use trust signals?',
+        options: ['To help users feel confident about the page or business.', 'To hide weak content.', 'To replace all SEO work.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Technical SEO for non-technical heroes',
+    duration: '60 minutes',
+    goal: 'Understand technical SEO in plain English so you can spot issues, ask better questions, and work with developers confidently.',
+    outcomes: [
+      'Explain crawlability, indexability, mobile friendliness, speed, HTTPS, and structured data.',
+      'Know which technical issues need urgent attention.',
+      'Use simple tools to check page health.',
+      'Create a developer-friendly issue note.'
+    ],
+    sections: {
+      what: [
+        'Technical SEO is about making sure search engines can access, understand, and show your important pages.',
+        'It includes crawling, indexing, site structure, mobile usability, page speed, HTTPS, redirects, canonicals, sitemaps, robots.txt, and structured data.',
+        'You do not need to code everything yourself, but you should understand the warning signs.'
+      ],
+      why: [
+        'A beautiful page cannot perform in search if Google cannot access or index it.',
+        'Slow, broken, or confusing pages can frustrate users.',
+        'Clear technical notes help developers fix issues faster.'
+      ],
+      where: [
+        'Use Search Console Page indexing, URL Inspection, Core Web Vitals, HTTPS, and Sitemaps reports.',
+        'Use browser checks on mobile and desktop.',
+        'Use page speed tools and structured data testing tools when needed.'
+      ],
+      how: [
+        'Check if the page opens for users and search engines.',
+        'Confirm the page is allowed to be indexed.',
+        'Check whether important pages are linked in menus, footers, category pages, or related content.',
+        'Write issues clearly: affected URL, problem, why it matters, screenshot, and expected fix.'
+      ]
+    },
+    glossary: [
+      ['Crawlability', 'How easily search engines can discover and access pages.'],
+      ['Indexability', 'Whether a page can be included in a search engine index.'],
+      ['Canonical', 'A signal that tells search engines which version of similar pages is preferred.'],
+      ['Redirect', 'Sending users and search engines from one URL to another.'],
+      ['Structured data', 'Extra page information in a format search engines can understand.']
+    ],
+    examples: [
+      {
+        title: 'Noindex mistake',
+        problem: 'A new service page is live but never appears in search.',
+        walkthrough: 'URL Inspection shows a noindex tag. The SEO superhero asks the developer to remove noindex from the live service page.',
+        takeaway: 'Small technical settings can block big business pages.'
+      },
+      {
+        title: 'Slow mobile page',
+        problem: 'A page looks fine on laptop but takes too long on mobile.',
+        walkthrough: 'The team compresses images, removes unused scripts, and checks Core Web Vitals.',
+        takeaway: 'Technical SEO supports real user experience.'
+      }
+    ],
+    practice: [
+      'Check one important URL in Search Console URL Inspection.',
+      'Open the same page on mobile and write down any friction.',
+      'List 3 technical questions to ask a developer.',
+      'Write one issue note with URL, problem, and expected fix.'
+    ],
+    mistakes: [
+      'Treating every warning as equally urgent.',
+      'Making developer requests without a specific URL.',
+      'Ignoring mobile users.'
+    ],
+    quiz: [
+      {
+        question: 'What is technical SEO mainly about?',
+        options: ['Helping search engines access, understand, and show important pages.', 'Only writing blogs.', 'Only posting on social media.'],
+        answer: 0
+      },
+      {
+        question: 'What does noindex do?',
+        options: ['It tells search engines not to index a page.', 'It makes a page load faster automatically.', 'It creates a backlink.'],
+        answer: 0
+      },
+      {
+        question: 'What makes a good developer issue note?',
+        options: ['URL, problem, why it matters, screenshot, and expected fix.', 'Only “SEO is broken.”', 'A list of random keywords.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Off-page SEO and reputation building',
+    duration: '60 minutes',
+    goal: 'Understand off-page SEO, backlinks, brand mentions, local reputation, and relationship-based promotion without spammy shortcuts.',
+    outcomes: [
+      'Explain backlinks and why quality matters.',
+      'Understand brand mentions, reviews, PR, and local citations.',
+      'Create safe promotion ideas for a website.',
+      'Avoid paid link schemes and fake reputation tactics.'
+    ],
+    sections: {
+      what: [
+        'Off-page SEO includes actions outside your website that can improve reputation and discovery.',
+        'Backlinks are links from other websites to your website.',
+        'Good off-page SEO usually comes from being useful, trustworthy, newsworthy, local, or relationship-worthy.'
+      ],
+      why: [
+        'Search engines and users use reputation clues to understand whether a site may be trustworthy.',
+        'Helpful mentions and links can bring direct referral traffic too.',
+        'For local businesses, reviews, maps, directories, and community presence can support discovery.'
+      ],
+      where: [
+        'Look for opportunities in industry websites, partners, local associations, event pages, publications, podcasts, case studies, and community pages.',
+        'Use Google Business Profile and reputable local directories for local businesses.',
+        'Use reviews and testimonials ethically.'
+      ],
+      how: [
+        'Create link-worthy assets: guides, tools, original photos, research, case studies, templates, or useful local resources.',
+        'Build relationships with partners, educators, journalists, communities, and customers.',
+        'Ask for links only when there is a real reason and value.',
+        'Track links and mentions, but judge quality over quantity.'
+      ]
+    },
+    glossary: [
+      ['Backlink', 'A link from another website to your website.'],
+      ['Referral traffic', 'Visitors who arrive through links from other websites.'],
+      ['Citation', 'An online mention of a business name, address, phone, or website.'],
+      ['Digital PR', 'Getting online attention through stories, data, expert comments, or useful resources.'],
+      ['Link scheme', 'A manipulative link tactic that violates search engine guidelines.']
+    ],
+    examples: [
+      {
+        title: 'Local clinic reputation',
+        problem: 'A clinic wants more local trust.',
+        walkthrough: 'It improves Google Business Profile details, asks real patients for honest reviews, joins a local health event, and earns a link from the event page.',
+        takeaway: 'Real-world reputation can create online signals.'
+      },
+      {
+        title: 'Useful template',
+        problem: 'A finance consultant wants links but has nothing worth linking to.',
+        walkthrough: 'They publish a free budget calculator and explain it in a simple guide, then share it with community groups and bloggers.',
+        takeaway: 'Useful assets earn better links than begging emails.'
+      }
+    ],
+    practice: [
+      'List 10 websites or communities that genuinely relate to your business.',
+      'Write one useful asset idea people may share.',
+      'Check whether business name, address, and phone are consistent online.',
+      'Draft one ethical outreach message.'
+    ],
+    mistakes: [
+      'Buying links that exist only to manipulate rankings.',
+      'Posting low-quality comments for links.',
+      'Ignoring reviews and brand reputation.'
+    ],
+    quiz: [
+      {
+        question: 'What is a backlink?',
+        options: ['A link from another website to your website.', 'A page heading.', 'A password reset link.'],
+        answer: 0
+      },
+      {
+        question: 'What is safer off-page SEO?',
+        options: ['Earning attention with useful resources and real relationships.', 'Buying hundreds of hidden links.', 'Using fake reviews.'],
+        answer: 0
+      },
+      {
+        question: 'Why do local citations matter?',
+        options: ['They help people and platforms understand business details.', 'They replace the website.', 'They automatically guarantee ranking first.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Black Hat SEO: danger zone',
+    duration: '60 minutes',
+    goal: 'Learn what black hat SEO is, why it is risky, and how to protect a website from shortcuts that can damage trust and visibility.',
+    outcomes: [
+      'Recognize common black hat tactics.',
+      'Understand search spam policies in simple language.',
+      'Identify red flags in SEO offers.',
+      'Choose safer alternatives to risky shortcuts.'
+    ],
+    sections: {
+      what: [
+        'Black hat SEO means using manipulative tactics to trick search engines instead of helping users.',
+        'Examples include keyword stuffing, hidden text, doorway pages, cloaking, link schemes, scraped content, fake reviews, and mass AI pages with no real value.',
+        'Some tricks may look like they work for a short time, but they can lead to ranking drops, manual actions, or lost trust.'
+      ],
+      why: [
+        'A business website is an asset. Risky tactics can damage that asset.',
+        'Black hat work often hides problems instead of building real value.',
+        'Clients and teams need to know red flags before hiring or approving SEO work.'
+      ],
+      where: [
+        'Watch for black hat risks in cheap SEO packages, suspicious backlink offers, copied content, automated page generation, and “guaranteed ranking” promises.',
+        'Use Search Console messages to monitor manual actions or security issues.',
+        'Review content and link-building work before publishing or approving it.'
+      ],
+      how: [
+        'Ask every SEO tactic: Would this help a real user if search engines did not exist?',
+        'Avoid paid links meant to manipulate ranking.',
+        'Reject copied or auto-generated pages that add no original value.',
+        'Document what was changed on the site so risky work can be reversed.'
+      ]
+    },
+    glossary: [
+      ['Black hat SEO', 'SEO tactics that try to manipulate search engines instead of helping users.'],
+      ['Cloaking', 'Showing different content to users and search engines to mislead rankings.'],
+      ['Doorway page', 'A low-value page made mainly to capture searches and send users elsewhere.'],
+      ['Manual action', 'A penalty-like action when a reviewer finds a site violates spam policies.'],
+      ['Link scheme', 'A manipulative practice to create links for ranking benefit.']
+    ],
+    examples: [
+      {
+        title: 'Guaranteed ranking offer',
+        problem: 'An agency promises “1000 backlinks in 7 days and first rank guaranteed.”',
+        walkthrough: 'The SEO superhero asks where links will appear, whether they are paid, and whether they are useful for real users. The offer fails the trust test.',
+        takeaway: 'If the promise sounds magical, check the risk.'
+      },
+      {
+        title: 'Copied city pages',
+        problem: 'A business creates 80 city pages with the same text and only city names changed.',
+        walkthrough: 'They replace thin doorway-style pages with genuinely useful location pages for cities they actually serve.',
+        takeaway: 'Scale without value can become spam.'
+      }
+    ],
+    practice: [
+      'List 5 red flags in an SEO proposal.',
+      'Review one page for keyword stuffing.',
+      'Check whether any page is copied or nearly duplicated.',
+      'Write a safer alternative for one risky tactic.'
+    ],
+    mistakes: [
+      'Trusting guaranteed ranking promises.',
+      'Approving paid links without understanding the risk.',
+      'Creating pages for search engines that are useless to people.'
+    ],
+    quiz: [
+      {
+        question: 'What is black hat SEO?',
+        options: ['Manipulative tactics that try to trick search engines.', 'Writing helpful content for users.', 'Making a website easier to navigate.'],
+        answer: 0
+      },
+      {
+        question: 'Which offer is a red flag?',
+        options: ['Guaranteed first ranking with thousands of backlinks in days.', 'A content audit with clear recommendations.', 'Fixing broken internal links.'],
+        answer: 0
+      },
+      {
+        question: 'What is a safer SEO question to ask?',
+        options: ['Would this help a real user if search engines did not exist?', 'Can we hide this from users?', 'Can we copy competitors quickly?'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'AI SEO and generative search',
+    duration: '60 minutes',
+    goal: 'Understand AI SEO, AI Overviews, and how to create content that is useful, trustworthy, and easy for both people and AI systems to understand.',
+    outcomes: [
+      'Explain AI SEO in simple language.',
+      'Understand how AI search experiences change user behavior.',
+      'Use AI tools safely for research and structure.',
+      'Create content with original value, clarity, and trustworthy details.'
+    ],
+    sections: {
+      what: [
+        'AI SEO means preparing your content for a search world where users may see AI-generated summaries, answer engines, and richer search experiences.',
+        'The basics still matter: helpful content, clear structure, crawlable pages, trustworthy information, and real value.',
+        'AI tools can help brainstorm, organize, summarize, and check clarity, but they should not replace expertise or original information.'
+      ],
+      why: [
+        'Searchers may ask longer, conversational questions.',
+        'AI features may summarize information, so pages need clear answers, strong examples, and trustworthy details.',
+        'Generic AI content can look polished but still be weak if it adds no experience, data, opinion, or practical usefulness.'
+      ],
+      where: [
+        'Use AI tools for outlines, question discovery, content gap checks, plain-English rewrites, and FAQ drafting.',
+        'Use your real business knowledge, customer stories, product details, photos, data, and expert review to add originality.',
+        'Use Search Console and analytics to understand what users still click and engage with.'
+      ],
+      how: [
+        'Start with the user question and answer it clearly near the top.',
+        'Add original experience: examples, screenshots, steps, comparisons, local details, expert notes, or data.',
+        'Use clear sections, summaries, FAQs, and schema when appropriate.',
+        'Review AI-assisted content for accuracy, usefulness, tone, and policy risk before publishing.'
+      ]
+    },
+    glossary: [
+      ['AI SEO', 'Optimizing content for search experiences that use AI summaries or conversational answers.'],
+      ['AI Overview', 'An AI-generated summary that can appear in Google Search for some queries.'],
+      ['Entity', 'A clearly identifiable thing, such as a person, place, brand, product, or topic.'],
+      ['Original value', 'Information, experience, examples, or insight that is not just copied or generic.'],
+      ['Scaled content abuse', 'Producing many low-value pages mainly to manipulate search rankings.']
+    ],
+    examples: [
+      {
+        title: 'Generic AI blog',
+        problem: 'A blog post about “best running shoes” reads like every other article.',
+        walkthrough: 'The team adds real shoe testing notes, photos, foot-type guidance, comparison table, and expert review.',
+        takeaway: 'AI can assist, but original experience makes content stronger.'
+      },
+      {
+        title: 'FAQ for AI-style questions',
+        problem: 'Users ask “Which digital marketing course is best after graduation?”',
+        walkthrough: 'The institute answers with clear factors: goal, time, budget, placement support, course modules, and who each option suits.',
+        takeaway: 'Conversational questions need direct, useful answers.'
+      }
+    ],
+    practice: [
+      'Choose one page and add a short direct answer near the top.',
+      'Add 3 original details competitors cannot easily copy.',
+      'Use AI to list possible user questions, then rewrite answers in your own expert voice.',
+      'Check whether every claim can be trusted or verified.'
+    ],
+    mistakes: [
+      'Publishing AI text without fact-checking.',
+      'Creating many generic pages with no original value.',
+      'Thinking AI SEO replaces technical SEO, on-page SEO, or trust.'
+    ],
+    quiz: [
+      {
+        question: 'What is AI SEO mainly about?',
+        options: ['Making content useful and clear for AI-influenced search experiences and people.', 'Letting AI publish unlimited pages without review.', 'Hiding content from users.'],
+        answer: 0
+      },
+      {
+        question: 'What should AI tools be used for safely?',
+        options: ['Research support, outlines, clarity checks, and drafts that humans review.', 'Publishing unverified claims automatically.', 'Copying competitors.'],
+        answer: 0
+      },
+      {
+        question: 'What makes AI-assisted content stronger?',
+        options: ['Original examples, expertise, data, and helpful details.', 'More generic paragraphs.', 'No human review.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'Local SEO and service business visibility',
+    duration: '60 minutes',
+    goal: 'Help local businesses become easier to find and trust in local search, maps, and nearby-service decisions.',
+    outcomes: [
+      'Understand local search intent.',
+      'Improve a Google Business Profile checklist.',
+      'Use reviews, service pages, and local content ethically.',
+      'Avoid fake local SEO tactics.'
+    ],
+    sections: {
+      what: [
+        'Local SEO helps businesses appear for searches with local intent, such as “near me,” city names, service areas, and map results.',
+        'It includes website pages, Google Business Profile, reviews, local citations, photos, services, hours, and location signals.',
+        'Local SEO is especially important for clinics, institutes, restaurants, stores, salons, agencies, repair services, and consultants.'
+      ],
+      why: [
+        'Local searchers often want to call, visit, book, or compare quickly.',
+        'Accurate information prevents lost leads caused by wrong hours, phone numbers, addresses, or services.',
+        'Reviews and photos help people trust a local business before contacting it.'
+      ],
+      where: [
+        'Use Google Business Profile for business details, categories, services, photos, posts, and reviews.',
+        'Use location or service-area pages on the website.',
+        'Use trusted directories where real customers may look.'
+      ],
+      how: [
+        'Make business name, address, phone, hours, and website accurate everywhere.',
+        'Choose the most accurate business categories.',
+        'Add service details and real photos.',
+        'Ask real customers for honest reviews and reply professionally.',
+        'Create useful local pages only for places you genuinely serve.'
+      ]
+    },
+    glossary: [
+      ['Local intent', 'A search where the user wants something nearby or in a specific area.'],
+      ['Google Business Profile', 'A free Google profile for eligible local businesses.'],
+      ['NAP', 'Name, address, and phone number.'],
+      ['Service area', 'The locations where a business serves customers.'],
+      ['Review response', 'A business reply to a customer review.']
+    ],
+    examples: [
+      {
+        title: 'Salon profile cleanup',
+        problem: 'A salon has wrong hours and no service details online.',
+        walkthrough: 'They update hours, add services, upload real photos, and reply to reviews.',
+        takeaway: 'Accurate basics can directly improve local customer trust.'
+      },
+      {
+        title: 'Service-area pages',
+        problem: 'A pest control company wants visibility in nearby cities.',
+        walkthrough: 'They create useful pages for real service areas with local proof, FAQs, pricing guidance, and contact options.',
+        takeaway: 'Local pages should be genuinely useful, not copied doorway pages.'
+      }
+    ],
+    practice: [
+      'Audit one Google Business Profile for accuracy.',
+      'Write 5 review request message ideas that feel polite and honest.',
+      'List service areas the business truly serves.',
+      'Draft one local FAQ answer.'
+    ],
+    mistakes: [
+      'Using fake addresses.',
+      'Copying the same city page many times.',
+      'Ignoring negative reviews instead of replying professionally.'
+    ],
+    quiz: [
+      {
+        question: 'What is local SEO for?',
+        options: ['Helping a business appear and build trust for nearby or area-based searches.', 'Only ranking national blogs.', 'Replacing customer service.'],
+        answer: 0
+      },
+      {
+        question: 'What does NAP mean?',
+        options: ['Name, address, and phone number.', 'New article plan.', 'No ads policy.'],
+        answer: 0
+      },
+      {
+        question: 'What is a safe review practice?',
+        options: ['Ask real customers for honest reviews.', 'Create fake reviews.', 'Pay only for five-star reviews.'],
+        answer: 0
+      }
+    ]
+  },
+  {
+    title: 'SEO reporting and superhero workflow',
+    duration: '60 minutes',
+    goal: 'Build a simple weekly and monthly SEO workflow so learners can improve pages calmly and measure real progress.',
+    outcomes: [
+      'Choose useful SEO KPIs.',
+      'Create a weekly SEO checklist.',
+      'Understand rankings, clicks, impressions, conversions, and learning hours.',
+      'Turn reports into actions instead of panic.'
+    ],
+    sections: {
+      what: [
+        'SEO reporting means turning search data into decisions.',
+        'A good report shows what changed, why it may have changed, and what action to take next.',
+        'A superhero workflow is a repeatable routine: check, learn, improve, publish, measure, and repeat.'
+      ],
+      why: [
+        'SEO takes time, so random daily changes can create confusion.',
+        'Reports help teams focus on pages that matter to business goals.',
+        'A calm process helps beginners avoid panic when numbers move up or down.'
+      ],
+      where: [
+        'Use Search Console for queries, pages, clicks, impressions, indexing, and Core Web Vitals clues.',
+        'Use analytics or CRM data for leads, sales, forms, calls, and engagement.',
+        'Use a simple tracker for actions completed and results observed.'
+      ],
+      how: [
+        'Weekly: check top pages, falling pages, new queries, indexing issues, and completed tasks.',
+        'Monthly: compare longer periods, summarize wins, explain problems, and choose next priorities.',
+        'Report business outcomes when possible: leads, calls, demo requests, sales, or signups.',
+        'End every report with 3 next actions.'
+      ]
+    },
+    glossary: [
+      ['KPI', 'A key performance indicator used to measure progress.'],
+      ['Impression', 'When a search result is shown to a user.'],
+      ['Click-through rate', 'The percentage of impressions that become clicks.'],
+      ['Conversion', 'A valuable action, such as a lead, sale, call, booking, or signup.'],
+      ['SEO backlog', 'A prioritized list of SEO tasks to work on.']
+    ],
+    examples: [
+      {
+        title: 'Traffic dropped',
+        problem: 'A page loses clicks for one week.',
+        walkthrough: 'The SEO superhero compares 28 days, checks queries, looks for indexing or page changes, and avoids panic from one-day movement.',
+        takeaway: 'Good reporting separates noise from real issues.'
+      },
+      {
+        title: 'Impressions up, clicks flat',
+        problem: 'A page appears more often but clicks do not grow.',
+        walkthrough: 'The title and meta description are improved to better match the searcher’s need.',
+        takeaway: 'Different metrics point to different actions.'
+      }
+    ],
+    practice: [
+      'Create a weekly SEO checklist with 7 tasks.',
+      'Choose 5 KPIs for one website.',
+      'Pick one page to improve based on a report.',
+      'Write 3 next actions after reviewing data.'
+    ],
+    mistakes: [
+      'Reporting only rankings and ignoring leads or useful actions.',
+      'Changing everything at once.',
+      'Not recording what was changed and when.'
+    ],
+    quiz: [
+      {
+        question: 'What should a useful SEO report include?',
+        options: ['What changed, possible reasons, and next actions.', 'Only a screenshot of one ranking.', 'Only competitor gossip.'],
+        answer: 0
+      },
+      {
+        question: 'What is a conversion?',
+        options: ['A valuable user action like a lead, call, sale, booking, or signup.', 'A website color.', 'A hidden keyword.'],
+        answer: 0
+      },
+      {
+        question: 'What should a beginner do when one day of traffic drops?',
+        options: ['Compare longer periods and investigate calmly.', 'Delete the whole website.', 'Stuff more keywords immediately.'],
+        answer: 0
+      }
+    ]
+  }
+];
+
+const seoSuperheroVisuals = lessonVisuals.slice(0, seoSuperheroLessons.length).map((visual, index) => ({
+  ...visual,
+  title: [
+    'Training screenshot: SEO superhero map',
+    'Worksheet: keyword and intent planner',
+    'Page markup: titles and headings',
+    'Checklist: links, images, and trust',
+    'Technical SEO health panel',
+    'Off-page reputation map',
+    'Danger board: black hat red flags',
+    'AI SEO content clarity board',
+    'Reporting dashboard: next actions'
+  ][index],
+  caption: [
+    'SEO becomes easier when learners see crawling, indexing, ranking, and intent as one journey.',
+    'Group keywords by real user need before writing pages.',
+    'A page becomes stronger when its title, headings, and content all support one useful answer.',
+    'Links, image text, proof, and calls to action make the page easier to trust and use.',
+    'Non-technical users can still spot crawl, index, mobile, speed, and structured data issues.',
+    'Off-page SEO is reputation building, not link begging.',
+    'Black hat tactics look tempting, but they put the website asset at risk.',
+    'AI SEO rewards clear answers, original value, expert review, and helpful structure.',
+    'A superhero workflow turns reports into calm weekly action.'
+  ][index]
+}));
+
 const courses = [
   {
     id: 'learn-google-search-console',
@@ -1747,6 +2609,13 @@ const courses = [
     subtitle: 'Learn search campaign structure, keywords, ads, landing pages, conversions, and optimization.',
     lessons: googleSearchAdsLessons,
     visuals: googleAdsVisuals
+  },
+  {
+    id: 'seo-superhero',
+    title: 'SEO Superhero',
+    subtitle: 'Learn on-page, off-page, technical, black-hat safety, local, reporting, and AI SEO in easy English.',
+    lessons: seoSuperheroLessons,
+    visuals: seoSuperheroVisuals
   }
 ];
 
@@ -2024,11 +2893,22 @@ function courseProgressPercent(userId, targetCourse) {
 }
 
 function courseLogo(item) {
-  const src = item.id === 'google-search-ads' ? '/google-ads-logo.svg' : '/search-console-logo.svg';
+  const src = item.id === 'google-search-ads' ? '/google-ads-logo.svg' : item.id === 'seo-superhero' ? '/seo-logo.svg' : '/search-console-logo.svg';
   return `<div class="course-icon"><img src="${src}" alt="${escapeHtml(item.title)} logo" /></div>`;
 }
 
 function courseSourceLinks(targetCourse) {
+  if (targetCourse.id === 'seo-superhero') {
+    return [
+      ['Google Search Central', 'SEO Starter Guide', 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide'],
+      ['Google Search Central', 'Creating helpful, reliable, people-first content', 'https://developers.google.com/search/docs/fundamentals/creating-helpful-content'],
+      ['Google Search Central', 'Spam policies for Google web search', 'https://developers.google.com/search/docs/essentials/spam-policies'],
+      ['Google Search Central', 'Understanding page experience', 'https://developers.google.com/search/docs/appearance/page-experience'],
+      ['Google Search Central', 'Intro to structured data', 'https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data'],
+      ['Google Search Central', 'AI features and your website', 'https://developers.google.com/search/docs/appearance/ai-features'],
+      ['Google Search Central', 'Optimizing for generative AI search', 'https://developers.google.com/search/docs/fundamentals/ai-optimization-guide']
+    ];
+  }
   if (targetCourse.id === 'google-search-ads') {
     return [
       ['Google Ads Help', 'About Search campaigns', 'https://support.google.com/google-ads/answer/1722047'],
